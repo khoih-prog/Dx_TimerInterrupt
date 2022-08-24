@@ -24,7 +24,7 @@
 #ifndef DX_TIMERINTERRUPT_HPP
 #define DX_TIMERINTERRUPT_HPP
 
-#define TIMER_INTERRUPT_USING_DX_CORE        false
+//#define TIMER_INTERRUPT_USING_DX_CORE        false
 
 #if defined(DXCORE)
 
@@ -35,49 +35,52 @@
     ////////////////////////// __AVR_DA__ //////////////////////////
   
     #if ( defined(__AVR_AVR128DA64__) || defined(__AVR_AVR128DA48__) || defined(__AVR_AVR128DA32__) || defined(__AVR_AVR128DA28__) )
-      #define BOARD_NAME      "AVR128DA"     
+      #define BOARD_NAME      F("AVR128DA" )    
     #elif ( defined(__AVR_AVR64DA64__) || defined(__AVR_AVR64DA48__) || defined(__AVR_AVR64DA32__) || defined(__AVR_AVR64DA28__) )
-      #define BOARD_NAME      "AVR64DA"
+      #define BOARD_NAME      F("AVR64DA")
     #elif ( defined(__AVR_AVR32DA48__) || defined(__AVR_AVR32DA32__) || defined(__AVR_AVR32DA28__) )
-      #define BOARD_NAME      "AVR32DA"
+      #define BOARD_NAME      F("AVR32DA")
         
     ////////////////////////// __AVR_DB__ //////////////////////////
       
     #elif ( defined(__AVR_AVR128DB64__) || defined(__AVR_AVR128DB48__) || defined(__AVR_AVR128DB32__) || defined(__AVR_AVR128DB28__) )
-      #define BOARD_NAME      "AVR128DB
+      #define BOARD_NAME      F("AVR128DB")
     #elif ( defined(__AVR_AVR64DB64__) || defined(__AVR_AVR64DB48__) || defined(__AVR_AVR64DB32__) || defined(__AVR_AVR64DB28__) )
-      #define BOARD_NAME      "AVR64DB"
+      #define BOARD_NAME      F("AVR64DB")
     #elif ( defined(__AVR_AVR32DB48__) || defined(__AVR_AVR32DB32__) || defined(__AVR_AVR32DB28__) )
-      #define BOARD_NAME      "AVR32DB"
+      #define BOARD_NAME      F("AVR32DB")
     
     ////////////////////////// __AVR_DD__ //////////////////////////
     
-    #elif ( defined(__AVR_AVR64DD32__) || defined(__AVR_AVR64DB28__) || defined(__AVR_AVR64DD20__) || defined(__AVR_AVR64DD14__) )
-      #define BOARD_NAME      "AVR64DD"
+    #elif ( defined(__AVR_AVR64DD32__) || defined(__AVR_AVR64DD28__) || defined(__AVR_AVR64DD20__) || defined(__AVR_AVR64DD14__) )
+      #define BOARD_NAME      F("AVR64DD")
+      #error AVR64DD not supported yet by the DxCore
     #elif ( defined(__AVR_AVR32DD32__) || defined(__AVR_AVR32DD28__) || defined(__AVR_AVR32DD20__) || defined(__AVR_AVR32DD14__) )
-      #define BOARD_NAME      "AVR32DD"
+      #define BOARD_NAME      F("AVR32DD")
+      #error AVR32DD not supported yet by the DxCore
     #elif ( defined(__AVR_AVR16DD32__) || defined(__AVR_AVR16DD28__) || defined(__AVR_AVR16DD20__) || defined(__AVR_AVR16DD14__) )
-      #define BOARD_NAME      "AVR16DD"
+      #define BOARD_NAME      F("AVR16DD")
+      #error AVR16DD not supported yet by the DxCore
     
     ////////////////////////// __AVR_DU__ //////////////////////////
     
     #elif ( defined(__AVR_AVR64DU32__) || defined(__AVR_AVR64DU28__) )
-      #define BOARD_NAME      "AVR64DU"
+      #define BOARD_NAME      F("AVR64DU")
     #elif ( defined(__AVR_AVR32DU32__) || defined(__AVR_AVR32DU28__) || defined(__AVR_AVR32DU20__) || defined(__AVR_AVR32DU14__) )
-      #define BOARD_NAME      "AVR32DU"
+      #define BOARD_NAME      F("AVR32DU")
     #elif ( defined(__AVR_AVR16DU32__) || defined(__AVR_AVR16DU28__) || defined(__AVR_AVR16DU20__) || defined(__AVR_AVR16DU14__) )
-      #define BOARD_NAME      "AVR16DU" 
+      #define BOARD_NAME      F("AVR16DU")
     
     ////////////////////////// __AVR_EA__ //////////////////////////
     
     #elif ( defined(__AVR_AVR64EA48__) || defined(__AVR_AVR64EA32__) || defined(__AVR_AVR64EA28__) )
-      #define BOARD_NAME      "AVR64EA"
+      #define BOARD_NAME      F("AVR64EA")
     #elif ( defined(__AVR_AVR32EA48__) || defined(__AVR_AVR32EA32__) || defined(__AVR_AVR32EA28__) )
-      #define BOARD_NAME      "AVR32EA"
+      #define BOARD_NAME      F("AVR32EA")
     #elif ( defined(__AVR_AVR16EA48__) || defined(__AVR_AVR16EA32__) || defined(__AVR_AVR16EA28__) )
-      #define BOARD_NAME      "AVR16EA"
+      #define BOARD_NAME      F("AVR16EA")
     #elif ( defined(__AVR_AVR8EA48__) || defined(__AVR_AVR8EA32__) || defined(__AVR_AVR8EA28__) )
-      #define BOARD_NAME      "AVR8EA"
+      #define BOARD_NAME      F("AVR8EA")
       
     ////////////////////////////////////////////////////////////////
 
@@ -85,58 +88,21 @@
     
   #endif  // #if !defined(BOARD_NAME)
        
-#elif defined(MEGATINYCORE)      
+#elif defined(MEGATINYCORE)
       
   #define TIMER_INTERRUPT_USING_MEGATINYCORE       true  
   
-  #define BOARD_NAME      "MEGATINYCORE Board"    
+  #define BOARD_NAME      F("MEGATINYCORE Board") 
+  
+  #error Support for megaTinyCore not ready yet! Please check your Tools->Board setting 
       
 #else
  
-  #error This is designed only for AVRDx boards using DxCore or megaTinyCore ! Please check your Tools->Board setting 
+  #error This is designed only for AVRDx boards using DxCore or megaTinyCore ! Please check your Tools->Board setting
 
 #endif
 
-#if 0
-#if ( defined(__AVR_ATmega4809__) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_AVR_NANO_EVERY) || \
-      defined(ARDUINO_AVR_ATmega4809) || defined(ARDUINO_AVR_ATmega4808) || defined(ARDUINO_AVR_ATmega3209) || \
-      defined(ARDUINO_AVR_ATmega3208) || defined(ARDUINO_AVR_ATmega1609) || defined(ARDUINO_AVR_ATmega1608) || \
-      defined(ARDUINO_AVR_ATmega809) || defined(ARDUINO_AVR_ATmega808) )
-  #if !defined(BOARD_NAME)
-    #if (ARDUINO_AVR_UNO_WIFI_REV2)
-      #define BOARD_NAME      "megaAVR UNO WiFi Rev2"
-      #define TIMER_INTERRUPT_USING_DX_CORE        true
-    #elif (ARDUINO_AVR_NANO_EVERY)
-      #define BOARD_NAME      "megaAVR Nano Every"
-      #define TIMER_INTERRUPT_USING_DX_CORE        true
-    #else
-      #define TIMER_INTERRUPT_USING_DX_CORE        false 
-       
-		  #if (ARDUINO_AVR_ATmega4809)
-		    #define BOARD_NAME      "MegaCoreX ATmega4809"
-		  #elif (ARDUINO_AVR_ATmega4808)
-		    #define BOARD_NAME      "MegaCoreX ATmega4808"
-		  #elif (ARDUINO_AVR_ATmega3209)
-		    #define BOARD_NAME      "MegaCoreX ATmega3209"
-		  #elif (ARDUINO_AVR_ATmega3208)
-		    #define BOARD_NAME      "MegaCoreX ATmega3208"
-		  #elif (ARDUINO_AVR_ATmega1609)
-		    #define BOARD_NAME      "MegaCoreX ATmega1609"
-		  #elif (ARDUINO_AVR_ATmega1608)
-		    #define BOARD_NAME      "MegaCoreX ATmega1608"
-		  #elif (ARDUINO_AVR_ATmega809)
-		    #define BOARD_NAME      "MegaCoreX ATmega809"
-		  #elif (ARDUINO_AVR_ATmega808)
-		    #define BOARD_NAME      "MegaCoreX ATmega808"   
-		  #else
-		    #define BOARD_NAME      "megaAVR Unknown"
-		  #endif  
-    #endif
-  #endif
-#else
-  #error This is designed only for Arduino or MegaCoreX megaAVR board! Please check your Tools->Board setting
-#endif
-#endif
+///////////////////////////////////////////////////////////////////////////////
 
 #ifndef TIMER_INTERRUPT_DEBUG
   #define TIMER_INTERRUPT_DEBUG      0
@@ -145,7 +111,7 @@
 #include "TimerInterrupt_Generic_Debug.h"
 
 #ifndef DX_TIMER_INTERRUPT_VERSION
-  #define DX_TIMER_INTERRUPT_VERSION       "Dx_TimerInterrupt v1.0.0"
+  #define DX_TIMER_INTERRUPT_VERSION       			F("Dx_TimerInterrupt v1.0.0")
   
   #define DX_TIMER_INTERRUPT_VERSION_MAJOR      1
   #define DX_TIMER_INTERRUPT_VERSION_MINOR      0
@@ -185,6 +151,17 @@ enum
   NUM_HW_TIMERS
 };
 
+#if ( defined(MILLIS_USE_TIMERB0) && USE_TIMER_0)
+  #error TCB0 has been used by millis()
+#elif ( defined(MILLIS_USE_TIMERB1) && USE_TIMER_1)
+  #error TCB1 has been used by millis()  
+#elif ( defined(MILLIS_USE_TIMERB2) && USE_TIMER_2)
+  #error TCB2 has been used by millis()
+#elif ( defined(MILLIS_USE_TIMERB3) && USE_TIMER_3)
+  #error TCB3 has been used by millis()
+#elif ( defined(MILLIS_USE_TIMERB4) && USE_TIMER_4)
+  #error TCB3 has been used by millis()  
+#endif
 
 class TimerInterrupt
 {

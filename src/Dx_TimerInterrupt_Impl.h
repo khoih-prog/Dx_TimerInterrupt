@@ -79,21 +79,21 @@ typedef enum TCB_CNTMODE_enum
 
 #if defined(TCB4)
   #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning Using TCB0-TCB4 Timers
+    #warning TCB0-TCB4 Timers available
   #endif
     
   TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2, &TCB3, &TCB4 };
   
 #elif defined(TCB3)
   #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning Using TCB0-TCB3 Timers
+    #warning TCB0-TCB3 Timers available
   #endif
     
   TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2, &TCB3 };
   
 #else
   #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning Using TCB0-TCB2 Timers
+    #warning TCB0-TCB2 Timers available
   #endif
     
   TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2 };  
@@ -105,38 +105,48 @@ typedef enum TCB_CNTMODE_enum
 
 //#define CLK_TCA_FREQ      (250000L)
 
-// Assuming Clock is 16MHz
-#if USING_16MHZ  
-  // Use no prescaler (prescaler 1) => 16MHz
-  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning Using no prescaler => 16MHz
-  #endif
-  
-  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_CLKDIV1_gc
-  #define CLOCK_PRESCALER       1
-#elif USING_8MHZ
-  // Use prescaler 2 => 8MHz
-  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning Using prescaler 2 => 8MHz
-  #endif
-  
-  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_CLKDIV2_gc
-  #define CLOCK_PRESCALER       2
-#elif USING_250KHZ
-  // Optional, but for clarity
-  // Use Timer A as clock (prescaler 64) => 250KHz
-  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_CLKTCA_gc 
-  #define CLOCK_PRESCALER       64
-#else
-  // Use Timer A as clock (prescaler 64) => 250KHz
-  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning Using prescaler 64 => 250KHz
-  #endif
-  
-  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_CLKTCA_gc
-  #define CLOCK_PRESCALER       64
-#endif
+//#define TCB_CLKSEL_DIV1_gc TCB_CLKSEL_CLKDIV1_gc
 
+// Assuming Clock is 16MHz
+#if USING_FULL_CLOCK
+  // Use no prescaler (prescaler 1) => 24/16MHz, etc.
+  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
+    #warning Using no prescaler => FULL_CLOCK (24MHz, 16MHz, etc)
+  #endif
+  
+  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_DIV1_gc
+  #define CLOCK_PRESCALER       1
+  
+#elif USING_HALF_CLOCK
+  // Use prescaler 2 => 12/8MHz, etc.
+  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
+    #warning Using prescaler 2 => HALF_CLOCK (12MHz, 8MHz, etc.)
+  #endif
+  
+  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_DIV2_gc
+  #define CLOCK_PRESCALER       2
+
+// No TCB_CLKSEL_CLKTCA_gc in DXCore ???
+// Don't use 250KHz now
+#elif USING_250KHZ
+		// Optional, but for clarity
+		// Use Timer A as clock (prescaler 64) => 250KHz
+		#define TCB_CLKSEL_VALUE      TCB_CLKSEL_CLKTCA_gc 
+		#define CLOCK_PRESCALER       64
+		
+		#error Not OK now. Do not use
+		
+#else
+	// Use prescaler 2 => 8MHz
+	#if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
+	  #warning Using prescaler 2 => 8MHz
+	#endif
+	
+	#define TCB_CLKSEL_VALUE      TCB_CLKSEL_DIV2_gc
+	#define CLOCK_PRESCALER       2
+	
+#endif
+  
 #define CLK_TCB_FREQ          ( F_CPU / CLOCK_PRESCALER )
 
 //////////////////////////////////////////////
@@ -154,7 +164,7 @@ void TimerInterrupt::init(const int8_t& timer)
   TimerTCB[timer]->CTRLB    = TCB_CNTMODE_INT_gc;                         // Use timer compare mode
   TimerTCB[timer]->CCMP     = MAX_COUNT_16BIT;                            // Value to compare with.
   TimerTCB[timer]->INTCTRL  &= ~TCB_CAPT_bm;                              // Disable the interrupt
-  TimerTCB[timer]->CTRLA    = TCB_CLKSEL_VALUE | TCB_ENABLE_bm;       // Use Timer A as clock, enable timer
+  TimerTCB[timer]->CTRLA    = TCB_CLKSEL_VALUE | TCB_ENABLE_bm;           // Use Timer A as clock, enable timer
 
   TISR_LOGWARN1(F("TCB"), timer);
   
@@ -369,7 +379,7 @@ void TimerInterrupt::resumeTimer()
         {
           if (ITimer0.checkTimerDone())
           {  
-            TISR_LOGDEBUG3(("T0 callback, _CCMPValueRemaining = "), ITimer0.get_CCMPValueRemaining(), (", millis = "), millis());
+            TISR_LOGDEBUG3(F("T0 callback, _CCMPValueRemaining = "), ITimer0.get_CCMPValueRemaining(), F(", millis = "), millis());
             
             ITimer0.callback();
             
@@ -392,7 +402,7 @@ void TimerInterrupt::resumeTimer()
         }
         else
         {
-          TISR_LOGWARN(("T0 done"));
+          TISR_LOGWARN(F("T0 done"));
           
           ITimer0.detachInterrupt();
         }
@@ -425,7 +435,7 @@ void TimerInterrupt::resumeTimer()
       {
         if (ITimer1.checkTimerDone())
         {
-          TISR_LOGDEBUG3(("T1 callback, _CCMPValueRemaining = "), ITimer1.get_CCMPValueRemaining(), (", millis = "), millis());
+          TISR_LOGDEBUG3(F("T1 callback, _CCMPValueRemaining = "), ITimer1.get_CCMPValueRemaining(), F(", millis = "), millis());
           
           ITimer1.callback();
           
@@ -448,7 +458,7 @@ void TimerInterrupt::resumeTimer()
       }
       else
       {
-        TISR_LOGWARN(("T1 done"));
+        TISR_LOGWARN(F("T1 done"));
         
         ITimer1.detachInterrupt();
       }
@@ -479,7 +489,7 @@ void TimerInterrupt::resumeTimer()
       {
         if (ITimer2.checkTimerDone())
         {
-          TISR_LOGDEBUG3(("T2 callback, _CCMPValueRemaining = "), ITimer2.get_CCMPValueRemaining(), (", millis = "), millis());
+          TISR_LOGDEBUG3(F("T2 callback, _CCMPValueRemaining = "), ITimer2.get_CCMPValueRemaining(), F(", millis = "), millis());
            
           ITimer2.callback();
           
@@ -502,7 +512,7 @@ void TimerInterrupt::resumeTimer()
       }    
       else
       {
-        TISR_LOGWARN(("T2 done"));
+        TISR_LOGWARN(F("T2 done"));
         
         ITimer2.detachInterrupt();
       }
@@ -533,7 +543,7 @@ void TimerInterrupt::resumeTimer()
         {
           if (ITimer3.checkTimerDone())
           { 
-            TISR_LOGDEBUG3(("T3 callback, _CCMPValueRemaining = "), ITimer3.get_CCMPValueRemaining(), (", millis = "), millis());
+            TISR_LOGDEBUG3(F("T3 callback, _CCMPValueRemaining = "), ITimer3.get_CCMPValueRemaining(), F(", millis = "), millis());
             
             ITimer3.callback();
             
@@ -556,7 +566,7 @@ void TimerInterrupt::resumeTimer()
         }
         else
         {
-          TISR_LOGWARN(("T3 done"));
+          TISR_LOGWARN(F("T3 done"));
           
           ITimer3.detachInterrupt();
         }
@@ -588,7 +598,7 @@ void TimerInterrupt::resumeTimer()
         {
           if (ITimer4.checkTimerDone())
           { 
-            TISR_LOGDEBUG3(("T4 callback, _CCMPValueRemaining = "), ITimer4.get_CCMPValueRemaining(), (", millis = "), millis());
+            TISR_LOGDEBUG3(F("T4 callback, _CCMPValueRemaining = "), ITimer4.get_CCMPValueRemaining(), F(", millis = "), millis());
             
             ITimer4.callback();
             
@@ -611,7 +621,7 @@ void TimerInterrupt::resumeTimer()
         }
         else
         {
-          TISR_LOGWARN(("T4 done"));
+          TISR_LOGWARN(F("T4 done"));
           
           ITimer4.detachInterrupt();
         }

@@ -24,47 +24,20 @@
 #ifndef DX_ISR_TIMER_HPP
 #define DX_ISR_TIMER_HPP
 
-#if ( defined(__AVR_ATmega4809__) || defined(ARDUINO_AVR_UNO_WIFI_REV2) || defined(ARDUINO_AVR_NANO_EVERY) || \
-      defined(ARDUINO_AVR_ATmega4809) || defined(ARDUINO_AVR_ATmega4808) || defined(ARDUINO_AVR_ATmega3209) || \
-      defined(ARDUINO_AVR_ATmega3208) || defined(ARDUINO_AVR_ATmega1609) || defined(ARDUINO_AVR_ATmega1608) || \
-      defined(ARDUINO_AVR_ATmega809) || defined(ARDUINO_AVR_ATmega808) )
-  #if !defined(BOARD_NAME)
-    #if (ARDUINO_AVR_UNO_WIFI_REV2)
-      #define BOARD_NAME      "megaAVR UNO WiFi Rev2"
-    #elif (ARDUINO_AVR_NANO_EVERY)
-      #define BOARD_NAME      "megaAVR Nano Every"
-    #elif (ARDUINO_AVR_ATmega4809)
-      #define BOARD_NAME      "MegaCoreX ATmega4809"
-    #elif (ARDUINO_AVR_ATmega4808)
-      #define BOARD_NAME      "MegaCoreX ATmega4808"
-    #elif (ARDUINO_AVR_ATmega3209)
-      #define BOARD_NAME      "MegaCoreX ATmega3209"
-    #elif (ARDUINO_AVR_ATmega3208)
-      #define BOARD_NAME      "MegaCoreX ATmega3208"
-    #elif (ARDUINO_AVR_ATmega1609)
-      #define BOARD_NAME      "MegaCoreX ATmega1609"
-    #elif (ARDUINO_AVR_ATmega1608)
-      #define BOARD_NAME      "MegaCoreX ATmega1608"
-    #elif (ARDUINO_AVR_ATmega809)
-      #define BOARD_NAME      "MegaCoreX ATmega809"
-    #elif (ARDUINO_AVR_ATmega808)
-      #define BOARD_NAME      "MegaCoreX ATmega808"   
-    #else
-      #define BOARD_NAME      "megaAVR Unknown"
-    #endif
-  #endif
+#if ( defined(DXCORE) || defined(MEGATINYCORE) )
+
 #else
-  #error This is designed only for Arduino or MegaCoreX megaAVR board! Please check your Tools->Board setting
+  #error This is designed only for AVRDx boards using DxCore or megaTinyCore ! Please check your Tools->Board setting
 #endif
 
 #ifndef DX_TIMER_INTERRUPT_VERSION
-  #define DX_TIMER_INTERRUPT_VERSION       "Dx_TimerInterrupt v1.6.0"
+  #define DX_TIMER_INTERRUPT_VERSION       			F("Dx_TimerInterrupt v1.0.0")
   
   #define DX_TIMER_INTERRUPT_VERSION_MAJOR      1
-  #define DX_TIMER_INTERRUPT_VERSION_MINOR      6
+  #define DX_TIMER_INTERRUPT_VERSION_MINOR      0
   #define DX_TIMER_INTERRUPT_VERSION_PATCH      0
 
-  #define DX_TIMER_INTERRUPT_VERSION_INT        1006000  
+  #define DX_TIMER_INTERRUPT_VERSION_INT        1000000
 #endif
 
 #include "TimerInterrupt_Generic_Debug.h"
