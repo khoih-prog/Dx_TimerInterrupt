@@ -13,6 +13,9 @@
   This important feature is absolutely necessary for mission-critical tasks.
 *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -54,8 +57,20 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.h"
 
-#ifndef LED_BUILTIN
-  #define LED_BUILTIN       13
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
 #endif
 
 // For PWM_Value from 0-255.You can change to 1024 or 2048
@@ -82,7 +97,7 @@ volatile uint32_t startMillis = 0;
 
 #define NUMBER_ISR_TIMERS         16
 
-void TimerHandler(void)
+void TimerHandler()
 {
   static bool toggle  = false;
   static uint32_t timeRun  = 0;
@@ -105,7 +120,7 @@ void TimerHandler(void)
 
 /////////////////////////////////////////////////
 
-typedef void (*irqCallback)  (void);
+typedef void (*irqCallback)();
 
 /////////////////////////////////////////////////
 
@@ -373,24 +388,6 @@ void loop()
     // UNI, Nano, etc can use pins from 2-12. Pin 13 is used for LED_BUILTIN
     // Mega can use many more pins, such as 22-53
 
-#if (defined(__AVR_ATmega1280__) || defined(__AVR_ATmega2560__))
-    fakeAnalogWrite(22, i * DIVIDER);
-    fakeAnalogWrite(23, i * DIVIDER);
-    fakeAnalogWrite(24, i * DIVIDER);
-    fakeAnalogWrite(25, i * DIVIDER);
-    fakeAnalogWrite(26, i * DIVIDER);
-    fakeAnalogWrite(27, i * DIVIDER);
-    fakeAnalogWrite(28, i * DIVIDER);
-    fakeAnalogWrite(29, i * DIVIDER);
-    fakeAnalogWrite(30, i * DIVIDER);
-    fakeAnalogWrite(31, i * DIVIDER);
-    fakeAnalogWrite(32, i * DIVIDER);
-    fakeAnalogWrite(33, i * DIVIDER);
-    fakeAnalogWrite(34, i * DIVIDER);
-    fakeAnalogWrite(35, i * DIVIDER);
-    fakeAnalogWrite(36, i * DIVIDER);
-    fakeAnalogWrite(37, i * DIVIDER);
-#else
     fakeAnalogWrite( 2, i * DIVIDER);
     fakeAnalogWrite( 3, i * DIVIDER);
     fakeAnalogWrite( 4, i * DIVIDER);
@@ -407,7 +404,6 @@ void loop()
     fakeAnalogWrite(A2, i * DIVIDER);
     fakeAnalogWrite(A3, i * DIVIDER);
     fakeAnalogWrite(A4, i * DIVIDER);
-#endif
 
 #if (LOCAL_DEBUG > 0)
     Serial.print(F("Test PWM_Value = ")); Serial.print(i * DIVIDER);

@@ -1,6 +1,6 @@
 {
   "name": "Dx_TimerInterrupt",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "keywords": "timer, interrupt, isr, isr-based, timing, control, hardware-timer, mission-critical, accuracy, megaavr, nano-every, uno-wifi-rev2, atmega4809, atmega4808, atmega3209, atmega3208, atmega1609, atmega1608, atmega809, atmega808",
   "description": "This library enables you to use Interrupt from Hardware Timers on Arduino AVRDx-based boards (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore. These AVRDx Hardware Timers, using Interrupt, still work even if other functions are blocking. Moreover, they are much more precise (certainly depending on clock frequency accuracy) than other software timers using millis() or micros(). That is mandatory if you need to measure some data requiring better accuracy. It now supports 16 ISR-based Timers, while consuming only 1 Hardware Timer. Timers interval is very long (ulong millisecs). The most important feature is they are ISR-based Timers. Therefore, their executions are not blocked by bad-behaving functions or tasks. This important feature is absolutely necessary for mission-critical tasks",
   "authors":

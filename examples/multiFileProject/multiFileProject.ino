@@ -13,6 +13,9 @@
   This important feature is absolutely necessary for mission-critical tasks.
 *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif

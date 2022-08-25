@@ -13,6 +13,9 @@
   This important feature is absolutely necessary for mission-critical tasks.
 *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -61,8 +64,20 @@
 
 ISR_Timer ISR_Timer1;
 
-#ifndef LED_BUILTIN
-  #define LED_BUILTIN       13
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
 #endif
 
 #define LED_TOGGLE_INTERVAL_MS        1000L

@@ -9,12 +9,18 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.1.0](#release-v110)
   * [Initial Release v1.0.0](#initial-release-v100)
 
 ---
 ---
 
 ## Changelog
+
+### Release v1.1.0
+
+1. Improve and customize examples for `Curiosity Nano AVRDA/AVRDB` boards to use on-board LED and SW
+2. Add notes `howto upload by drag-and-drop` to `CURIOSITY` virtual drive
 
 ### Initial Release v1.0.0
 

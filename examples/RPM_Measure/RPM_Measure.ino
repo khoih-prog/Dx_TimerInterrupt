@@ -23,6 +23,9 @@
    then use timer to count the time between active state
 */
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -64,7 +67,16 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.h"
 
-unsigned int SWPin = A0;
+// To modify according to your board
+// For Curiosity Nano AVR128DA48 => use SW => PIN_PC7
+// For Curiosity Nano AVR128DB48 => use SW => PIN_PB2
+#if defined(__AVR_AVR128DA48__) 
+  unsigned int SWPin = PIN_PC7;
+#elif defined(__AVR_AVR128DB48__) 
+  unsigned int SWPin = PIN_PB2;
+#else
+  unsigned int SWPin = A0;
+#endif
 
 #define TIMER1_INTERVAL_MS        1
 #define DEBOUNCING_INTERVAL_MS    80
@@ -81,14 +93,6 @@ volatile int debounceCounter;
 
 void TimerHandler1()
 {
-  static bool started = false;
-
-  if (!started)
-  {
-    started = true;
-    pinMode(SWPin, INPUT_PULLUP);
-  }
-
   if ( !digitalRead(SWPin) && (debounceCounter >= DEBOUNCING_INTERVAL_MS / TIMER1_INTERVAL_MS ) )
   {
     //min time between pulses has passed
@@ -130,6 +134,8 @@ void setup()
 {
   Serial.begin(115200);
   while (!Serial && millis() < 5000);
+
+  pinMode(SWPin, INPUT_PULLUP);
 
   Serial.print(F("\nStarting RPM_Measure on ")); Serial.println(BOARD_NAME);
   Serial.println(DX_TIMER_INTERRUPT_VERSION);

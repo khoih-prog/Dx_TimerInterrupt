@@ -13,6 +13,9 @@
   This important feature is absolutely necessary for mission-critical tasks.
 *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -54,8 +57,20 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.h"
 
-#if !defined(LED_BUILTIN)
-  #define LED_BUILTIN     13
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
 #endif
 
 struct pinStruct
@@ -70,15 +85,6 @@ volatile pinStruct myOutputPins = { LED_BUILTIN, A0, A1 };
 void TimerHandler1(unsigned int outputPinsAddress)
 {
   static bool toggle = false;
-  static bool started = false;
-
-  if (!started)
-  {
-    started = true;
-    pinMode(((pinStruct *) outputPinsAddress)->Pin1, OUTPUT);
-    pinMode(((pinStruct *) outputPinsAddress)->Pin2, INPUT_PULLUP);
-    pinMode(((pinStruct *) outputPinsAddress)->Pin3, INPUT_PULLUP);
-  }
 
   //timer interrupt toggles pins
 #if (TIMER_INTERRUPT_DEBUG > 1)
@@ -104,6 +110,10 @@ void TimerHandler1(unsigned int outputPinsAddress)
 
 void setup()
 {
+  pinMode(myOutputPins.Pin1, OUTPUT);
+  pinMode(myOutputPins.Pin2, INPUT_PULLUP);
+  pinMode(myOutputPins.Pin3, INPUT_PULLUP);
+    
   Serial.begin(115200);
   while (!Serial && millis() < 5000);
 

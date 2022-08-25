@@ -13,11 +13,14 @@
   This important feature is absolutely necessary for mission-critical tasks.
  *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
 
-// These define's must be placed at the beginning before #include "megaAVR_TimerInterrupt.h"
+// These define's must be placed at the beginning before #include "Dx_TimerInterrupt.h"
 // _TIMERINTERRUPT_LOGLEVEL_ from 0 to 4
 // Don't define _TIMERINTERRUPT_LOGLEVEL_ > 0. Only for special ISR debugging only. Can hang the system.
 #define TIMER_INTERRUPT_DEBUG         0
@@ -31,7 +34,7 @@
 #define USING_HALF_CLOCK      false
 #define USING_250KHZ          false         // Not supported now
 
-#define USE_TIMER_0           false
+#define USE_TIMER_0           false         // Used by core. Don't use
 #define USE_TIMER_1           true
 #define USE_TIMER_2           false         // Normally used by millis(). Don't use
 #define USE_TIMER_3           false
@@ -56,28 +59,35 @@
 
 #define TIMER1_INTERVAL_MS    1000
 
-#ifndef LED_BUILTIN
-  #define LED_BUILTIN   13
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
 #endif
 
 void TimerHandler1(void)
 {
-  static bool toggle1 = false;
-  static bool started = false;
-
-  if (!started)
-  {
-    started = true;
-    pinMode(LED_BUILTIN, OUTPUT);
-  }
+  static bool toggle = false;
 
   //timer interrupt toggles pin LED_BUILTIN
-  digitalWrite(LED_BUILTIN, toggle1);
-  toggle1 = !toggle1;
+  digitalWrite(LED_BUILTIN, toggle);
+  toggle = !toggle;
 }
 
 void setup()
 {
+  pinMode(LED_BUILTIN, OUTPUT);
+  
   Serial.begin(115200);
   while (!Serial && millis() < 5000);
 

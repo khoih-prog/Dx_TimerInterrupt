@@ -13,6 +13,9 @@
   This important feature is absolutely necessary for mission-critical tasks.
 *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -60,20 +63,25 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.h"
 
-#if !defined(LED_BUILTIN)
-  #define LED_BUILTIN     13
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
 #endif
 
 void TimerHandler1(unsigned int outputPin = LED_BUILTIN)
 {
   static bool toggle = false;
-  static bool started = false;
-
-  if (!started)
-  {
-    started = true;
-    pinMode(outputPin, OUTPUT);
-  }
 
 #if (TIMER_INTERRUPT_DEBUG > 1)
   Serial.print("ITimer called, millis() = "); Serial.println(millis());
@@ -86,7 +94,7 @@ void TimerHandler1(unsigned int outputPin = LED_BUILTIN)
 
 unsigned int outputPin1 = LED_BUILTIN;
 
-#define TIMER1_INTERVAL_MS    10000
+#define TIMER1_INTERVAL_MS    5000
 #define TIMER1_FREQUENCY      (float) (1000.0f / TIMER1_INTERVAL_MS)
 #define TIMER1_DURATION_MS    0 //(10 * TIMER1_INTERVAL_MS)
 
@@ -96,6 +104,8 @@ void setup()
 {
   Serial.begin(115200);
   while (!Serial && millis() < 5000);
+
+  pinMode(outputPin1, OUTPUT);
 
   Serial.print(F("\nStarting TimerInterruptTest on ")); Serial.println(BOARD_NAME);
   Serial.println(DX_TIMER_INTERRUPT_VERSION);
@@ -126,6 +136,7 @@ void setup()
 
 void loop()
 {
+#if 0  
   static unsigned long lastTimer1 = 0;
 
   static bool timerPaused         = false;
@@ -160,4 +171,5 @@ void loop()
     
     CurrentTimer.resumeTimer();
   }
+#endif  
 }

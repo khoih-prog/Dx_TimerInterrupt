@@ -20,6 +20,9 @@
    SW is released.
  *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -61,7 +64,35 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.h"
 
-unsigned int SWPin = A0;
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
+#endif
+
+#define LED_ON     0
+#define LED_OFF    1
+
+// To modify according to your board
+// For Curiosity Nano AVR128DA48 => use SW => PIN_PC7
+// For Curiosity Nano AVR128DB48 => use SW => PIN_PB2
+#if defined(__AVR_AVR128DA48__) 
+  unsigned int SWPin = PIN_PC7;
+#elif defined(__AVR_AVR128DB48__) 
+  unsigned int SWPin = PIN_PB2;
+#else
+  unsigned int SWPin = A0;
+#endif
 
 #define TIMER1_INTERVAL_MS        20
 #define DEBOUNCING_INTERVAL_MS    100
@@ -81,14 +112,6 @@ void TimerHandler1()
 
   unsigned long currentMillis = millis();
 #endif
-
-  static bool started = false;
-
-  if (!started)
-  {
-    started = true;
-    pinMode(SWPin, INPUT_PULLUP);
-  }
 
   if ( (!digitalRead(SWPin)) )
   {
@@ -110,6 +133,7 @@ void TimerHandler1()
         // Do something for SWPressed here in ISR
         // But it's better to use outside software timer to do your job instead of inside ISR
         //Your_Response_To_Press();
+        digitalWrite(LED_BUILTIN, LED_ON);
       }
 
       if (debounceCountSWPressed >= LONG_PRESS_INTERVAL_MS / TIMER1_INTERVAL_MS)
@@ -149,6 +173,7 @@ void TimerHandler1()
       // Do something for !SWPressed here in ISR
       // But it's better to use outside software timer to do your job instead of inside ISR
       //Your_Response_To_Release();
+      digitalWrite(LED_BUILTIN, LED_OFF);
 
       // Call and flag SWPressed
 #if (TIMER_INTERRUPT_DEBUG > 1)
@@ -165,6 +190,9 @@ void setup()
 {
   Serial.begin(115200);
   while (!Serial && millis() < 5000);
+
+  pinMode(SWPin, INPUT_PULLUP);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   Serial.print(F("\nStarting SwitchDebounce on ")); Serial.println(BOARD_NAME);
   Serial.println(DX_TIMER_INTERRUPT_VERSION);

@@ -13,6 +13,9 @@
   This important feature is absolutely necessary for mission-critical tasks.
 *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -54,25 +57,29 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.h"
 
-#if !defined(LED_BUILTIN)
-  #define LED_BUILTIN     13
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
 #endif
 
 unsigned int outputPin1 = LED_BUILTIN;
-unsigned int outputPin2 = A0;
 
 #define TIMER1_INTERVAL_MS    1000
 
 void TimerHandler1(unsigned int outputPin = LED_BUILTIN)
 {
-  static bool toggle1 = false;
-  static bool started = false;
-
-  if (!started)
-  {
-    started = true;
-    pinMode(outputPin, OUTPUT);
-  }
+  static bool toggle = false;
 
 #if (TIMER_INTERRUPT_DEBUG > 1)
   //timer interrupt toggles pin outputPin, default LED_BUILTIN
@@ -80,12 +87,14 @@ void TimerHandler1(unsigned int outputPin = LED_BUILTIN)
   Serial.print(" address: "); Serial.println((uint32_t) &outputPin );
 #endif
   
-  digitalWrite(outputPin, toggle1);
-  toggle1 = !toggle1;
+  digitalWrite(outputPin, toggle);
+  toggle = !toggle;
 }
 
 void setup()
 {
+  pinMode(LED_BUILTIN, OUTPUT);
+  
   Serial.begin(115200);
   while (!Serial && millis() < 5000);
 

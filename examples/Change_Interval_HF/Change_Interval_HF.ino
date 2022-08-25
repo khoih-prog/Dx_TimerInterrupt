@@ -13,6 +13,9 @@
   This important feature is absolutely necessary for mission-critical tasks.
 *****************************************************************************************************************************/
 
+// Important Note: To use drag-and-drop into CURIOSITY virtual drive if you can program via Arduino IDE
+// For example, check https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf
+
 #if !( defined(DXCORE) || defined(MEGATINYCORE) )
   #error This is designed only for DXCORE or MEGATINYCORE megaAVR board! Please check your Tools->Board setting
 #endif
@@ -54,11 +57,23 @@
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.h"
 
-#if !defined(LED_BUILTIN)
-  #define LED_BUILTIN     13
+#ifdef LED_BUILTIN
+  #undef LED_BUILTIN
+
+  // To modify according to your board
+  // For Curiosity Nano AVR128DA48 => PIN_PC6
+  // For Curiosity Nano AVR128DB48 => PIN_PB3
+  #if defined(__AVR_AVR128DA48__) 
+    #define LED_BUILTIN   PIN_PC6   // PIN_PB3, 13
+  #elif defined(__AVR_AVR128DB48__) 
+    #define LED_BUILTIN   PIN_PB3   // PIN_PC6, 13
+  #else
+    // standard Arduino pin 13
+    #define LED_BUILTIN   13
+  #endif
 #endif
 
-#define TIMER1_FREQUENCY            1000UL
+#define TIMER1_FREQUENCY            50UL
 
 volatile uint32_t Timer1Count = 0;
 
@@ -70,13 +85,21 @@ void printResult(uint32_t currTime)
 
 void TimerHandler1()
 {
+  static bool toggle = false;
+  
   Timer1Count++;
+
+  //timer interrupt toggles pin LED_BUILTIN
+  digitalWrite(LED_BUILTIN, toggle);
+  toggle = !toggle;
 }
 
 void setup()
 {
   Serial.begin(115200);
   while (!Serial && millis() < 5000);
+
+  pinMode(LED_BUILTIN, OUTPUT);
 
   Serial.print(F("\nStarting Change_Interval_HF on ")); Serial.println(BOARD_NAME);
   Serial.println(DX_TIMER_INTERRUPT_VERSION);
@@ -104,8 +127,8 @@ void setup()
     Serial.println(F("Can't set ITimer. Select another freq. or timer"));
 }
 
-#define CHECK_INTERVAL_MS     10000L
-#define CHANGE_INTERVAL_MS    20000L
+#define CHECK_INTERVAL_MS     1000L
+#define CHANGE_INTERVAL_MS    5000L
 
 void loop()
 {
@@ -124,7 +147,7 @@ void loop()
     if (currTime - lastChangeTime > CHANGE_INTERVAL_MS)
     {
       //setInterval(unsigned long interval, timerCallback callback)
-      multFactor = (multFactor + 1) % 2;
+      multFactor = (multFactor + 1) % 50;
 
       // interval (in ms) and duration (in milliseconds). Duration = 0 or not specified => run indefinitely
       // bool setInterval(unsigned long interval, timer_callback callback, unsigned long duration)
