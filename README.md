@@ -15,6 +15,7 @@
 
 ## Table of Contents
 
+* [Important Note for Arduino IDE](#Important-Note-for-Arduino-IDE)
 * [Why do we need this Dx_TimerInterrupt library](#why-do-we-need-this-Dx_TimerInterrupt-library)
   * [Features](#features)
   * [Why using ISR-based Hardware Timer Interrupt is better](#why-using-isr-based-hardware-timer-interrupt-is-better)
@@ -74,6 +75,56 @@
 ---
 ---
 
+### Important Note for Arduino IDE
+
+With some Arduino IDE versions, such as v1.8.19, upload directly via USB to some boards, such as `Curiosity_AVR128DA48` or `Curiosity_AVR128DB48` can't be done without unknown-to-me fix. We'll get the following error when uploading
+
+```
+avrdude: Version 6.3-20201216
+     Copyright (c) 2000-2005 Brian Dean, http://www.bdmicro.com/
+     Copyright (c) 2007-2014 Joerg Wunsch
+
+     System wide configuration file is "/home/kh/.arduino15/packages/DxCore/hardware/megaavr/1.4.10/avrdude.conf"
+     User configuration file is "/home/kh/.avrduderc"
+     User configuration file does not exist or is not a regular file, skipping
+
+     Using Port                    : usb
+     Using Programmer              : curiosity_updi
+avrdude: usbdev_open(): Found nEDBG CMSIS-DAP, serno: MCHP3280041800002682
+avrdude: usbdev_open(): WARNING: failed to set configuration 1: Device or resource busy
+avrdude: Found CMSIS-DAP compliant device, using EDBG protocol
+avrdude: usbdev_send(): wrote -5 out of 912 bytes, err = Input/output error
+avrdude: jtag3_edbg_prepare(): failed to send command to serial port
+
+avrdude done.  Thank you.
+
+the selected serial port 
+ does not exist or your board is not connected
+```
+
+We can use drag-and-drop method to `drag-and-drop` the compiled **hex** file to `CURIOSITY` virtual drive. 
+
+If `success`, The LED blinks **slowly** for 2 sec. The LED will blinks **rapidly* for 2 sec if `failure`
+
+
+For example, To run [Change_Interval example](https://github.com/khoih-prog/Dx_TimerInterrupt/tree/main/examples/Change_Interval), use Arduino IDE to compile, and get the `Change_Interval.ino.hex` file. For Ubuntu Linux, the file is store in directory `/tmp/arduino_build_xxxxxx`
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Change_Interval.png">
+</p>
+
+
+After drag-and-drop `Change_Interval.ino.hex` into `CURIOSITY` virtual drive, the code will run immidiately if successfully loaded (LED blinks **slowly**)
+
+
+<p align="center">
+    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Curiosity_AVR128DA48.png">
+</p>
+
+
+---
+---
 
 ### Why do we need this [Dx_TimerInterrupt library](https://github.com/khoih-prog/Dx_TimerInterrupt)
 
@@ -128,11 +179,13 @@ The catch is your function is now part of an ISR (Interrupt Service Routine), an
     <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Curiosity_AVR128DA48.png">
 </p>
 
-- **AVRDB-based boards (AVR128DB, AVR64DB, AVR32DD, etc.) using DxCore**
+
+- **AVRDB-based boards (AVR128DB, AVR64DB, AVR32DB, etc.) using DxCore**
 
 <p align="center">
     <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Curiosity_AVR128DB48.png">
 </p>
+
 
 ### To be supported Boards
 
@@ -220,10 +273,20 @@ Check the new [**multiFileProject** example](examples/multiFileProject) for a `H
 1. [Arduino 101: Timers and Interrupts](https://www.robotshop.com/community/forum/t/arduino-101-timers-and-interrupts/13072)
 2. [Getting Started with Timer/Counter Type B (TCB)](https://ww1.microchip.com/downloads/aemDocuments/documents/MCU08/ApplicationNotes/ApplicationNotes/TB3214-Getting-Started-with-TCB-DS90003214.pdf)
 3. [DXCore README.md](https://github.com/SpenceKonde/DxCore/blob/master/README.md)
+4. [AVR128DA48-Curiosity-Nano-Hardware-User Guide](https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DA48-Curiosity-Nano-UG-DS50002971B.pdf)
+5. [AVR128DB48-Curiosity-Nano-Hardware-User Guide](https://ww1.microchip.com/downloads/en/DeviceDoc/AVR128DB48-Curiosity-Nano-HW-UserG-DS50003037A.pdf)
+
+
 
 ### 2. Timer TCB0-TCB4
 
-TCB0-TCB are 16-bit timers.
+TCB0-TCB4 are 16-bit timers
+
+The AVRDx boards with 14, 20, 28 or 32 pins, such as AVRDx28, will have only 3 TCB timers, (TCB0-TCB2)
+
+The AVRDx with 48 pins, such as AVRDA48, AVRDB48, , will have 4 TCB timers, (TCB0-TCB3)
+
+The AVRDx with 64 pins, such as AVRDA64, AVRDB64, , will have 5 TCB timers, (TCB0-TCB4)
 
 ---
 ---
@@ -487,7 +550,7 @@ void setup()
 
 ### Example [ISR_16_Timers_Array_Complex](examples/ISR_16_Timers_Array_Complex)
 
-https://github.com/khoih-prog/Dx_TimerInterrupt/blob/0441816fc4540a8f7c03247950ad4386defda202/examples/ISR_16_Timers_Array_Complex/ISR_16_Timers_Array_Complex.ino#L16-L369
+https://github.com/khoih-prog/Dx_TimerInterrupt/blob/76fc97c9e52fbc79a02db77f3f0e9d8842062a7a/examples/ISR_16_Timers_Array_Complex/ISR_16_Timers_Array_Complex.ino#L16-L384
 
 
 ---
@@ -503,7 +566,7 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.0.0
+Dx_TimerInterrupt v1.1.0
 CPU Frequency = 16 MHz
 TCB Clock Frequency = 16MHz for highest accuracy
 Starting  ITimer OK, millis() = 6
@@ -656,7 +719,7 @@ Timer : 15, programmed : 80000, actual : 80016
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.0.0
+Dx_TimerInterrupt v1.1.0
 CPU Frequency = 16 MHz
 TCB Clock Frequency = 16MHz for highest accuracy
 Starting  ITimer OK, millis() = 6
@@ -742,7 +805,7 @@ Timer : 15, programmed : 80000, actual : 80000
 ```
 
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.0.0
+Dx_TimerInterrupt v1.1.0
 CPU Frequency = 16 MHz
 TCB Clock Frequency = Half clock (12/8MHz, etc.) for high accuracy
 Starting  ITimer OK, millis() = 10
@@ -811,7 +874,7 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval_HF on AVR128DA
-Dx_TimerInterrupt v1.0.0
+Dx_TimerInterrupt v1.1.0
 CPU Frequency = 16 MHz
 TCB Clock Frequency = 16MHz for highest accuracy
 [TISR] TCB 1
@@ -893,8 +956,8 @@ Submit issues to: [Dx_TimerInterrupt issues](https://github.com/khoih-prog/Dx_Ti
  6. Selectable **TCB Clock FULL, HALF** depending on necessary accuracy
  6. Fix `multiple-definitions` linker error
  7. Optimize library code by using `reference-passing` instead of `value-passing`
-
-
+ 8. Improve and customize examples for `Curiosity Nano AVRDA/AVRDB` boards to use on-board LED and SW
+ 9. Add notes `howto upload by drag-and-drop` to `CURIOSITY` virtual drive
 
 ---
 ---
