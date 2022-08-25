@@ -104,10 +104,10 @@ the selected serial port
 
 We can use drag-and-drop method to `drag-and-drop` the compiled **hex** file to `CURIOSITY` virtual drive. 
 
-If `success`, The LED blinks **slowly** for 2 sec. The LED will blinks **rapidly* for 2 sec if `failure`
+If `success`, The LED blinks **slowly** for 2 sec. The LED will blinks **rapidly** for 2 sec if `failure`
 
 
-For example, To run [Change_Interval example](https://github.com/khoih-prog/Dx_TimerInterrupt/tree/main/examples/Change_Interval), use Arduino IDE to compile, and get the `Change_Interval.ino.hex` file. For Ubuntu Linux, the file is store in directory `/tmp/arduino_build_xxxxxx`
+For example, to run [Change_Interval example](https://github.com/khoih-prog/Dx_TimerInterrupt/tree/main/examples/Change_Interval), use Arduino IDE to compile, and get the `Change_Interval.ino.hex` file. For Ubuntu Linux, the file is stored in directory `/tmp/arduino_build_xxxxxx`
 
 
 <p align="center">
@@ -115,7 +115,7 @@ For example, To run [Change_Interval example](https://github.com/khoih-prog/Dx_T
 </p>
 
 
-After drag-and-drop `Change_Interval.ino.hex` into `CURIOSITY` virtual drive, the code will run immidiately if successfully loaded (LED blinks **slowly**)
+After drag-and-drop the `Change_Interval.ino.hex` into `CURIOSITY` virtual drive, the code will run immidiately if successfully loaded (LED blinks **slowly**)
 
 
 <p align="center">
@@ -282,11 +282,13 @@ Check the new [**multiFileProject** example](examples/multiFileProject) for a `H
 
 TCB0-TCB4 are 16-bit timers
 
-The AVRDx boards with 14, 20, 28 or 32 pins, such as AVRDx28, will have only 3 TCB timers, (TCB0-TCB2)
+The AVRDx boards with 14, 20, 28 or 32 pins, such as `AVRDx28`, will have only 3 TCB timers, (TCB0-TCB2)
 
-The AVRDx with 48 pins, such as AVRDA48, AVRDB48, , will have 4 TCB timers, (TCB0-TCB3)
+The AVRDx with 48 pins, such as `Curiosity Nano AVRDA48`, `Curiosity Nano AVRDB48`, will have 4 TCB timers, (TCB0-TCB3)
 
-The AVRDx with 64 pins, such as AVRDA64, AVRDB64, , will have 5 TCB timers, (TCB0-TCB4)
+The AVRDx with 64 pins, such as `AVRDA64`, `AVRDB64`, will have 5 TCB timers, (TCB0-TCB4)
+
+The number of TCB timers will be automatically configured by the library.
 
 ---
 ---
@@ -909,7 +911,7 @@ Changing Frequency, Timer = 10000
 
 Debug is enabled by default on Serial.
 
-You can also change the debugging level from 0 to 3
+You can also change the debugging level from 0 to 4
 
 ```cpp
 // These define's must be placed at the beginning before #include "Dx_TimerInterrupt.h"
@@ -966,7 +968,7 @@ Submit issues to: [Dx_TimerInterrupt issues](https://github.com/khoih-prog/Dx_Ti
 
 Many thanks for everyone for bug reporting, new feature suggesting, testing and contributing to the development of this library. Especially to these people who have directly or indirectly contributed to this [Dx_TimerInterrupt library](https://github.com/khoih-prog/Dx_TimerInterrupt)
 
-1. Thanks to good work of [Spence Konde (aka Dr. Azzy)](https://github.com/SpenceKonde) for the good [DxCore](https://github.com/SpenceKonde/DxCore) and [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore)
+1. Thanks to good work of [Spence Konde (aka Dr. Azzy)](https://github.com/SpenceKonde) for the [DxCore](https://github.com/SpenceKonde/DxCore) and [megaTinyCore](https://github.com/SpenceKonde/megaTinyCore)
 2. Thanks to [LaurentR59](https://github.com/LaurentR59) to request the enhancement [Support for DX CORE CPU and MightyCORE CPU possible? #8](https://github.com/khoih-prog/TimerInterrupt_Generic/issues/8) leading to this new library
 
 <table>
