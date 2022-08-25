@@ -88,19 +88,19 @@ void TimerHandler1(unsigned int outputPinsAddress)
 
   //timer interrupt toggles pins
 #if (TIMER_INTERRUPT_DEBUG > 1)
-  Serial.print("Toggle pin1 = "); Serial.println( ((pinStruct *) outputPinsAddress)->Pin1 );
+  Serial1.print("Toggle pin1 = "); Serial1.println( ((pinStruct *) outputPinsAddress)->Pin1 );
 #endif
   
   digitalWrite(((pinStruct *) outputPinsAddress)->Pin1, toggle);
 
 #if (TIMER_INTERRUPT_DEBUG > 1)
-  Serial.print("Read pin2 A0 ("); Serial.print(((pinStruct *) outputPinsAddress)->Pin2 );
-  Serial.print(") = ");
-  Serial.println(digitalRead(((pinStruct *) outputPinsAddress)->Pin2) ? "HIGH" : "LOW" );                          
+  Serial1.print("Read pin2 A0 ("); Serial1.print(((pinStruct *) outputPinsAddress)->Pin2 );
+  Serial1.print(") = ");
+  Serial1.println(digitalRead(((pinStruct *) outputPinsAddress)->Pin2) ? "HIGH" : "LOW" );                          
 
-  Serial.print("Read pin3 A1 ("); Serial.print(((pinStruct *) outputPinsAddress)->Pin3 );
-  Serial.print(") = ");
-  Serial.println(digitalRead(((pinStruct *) outputPinsAddress)->Pin3) ? "HIGH" : "LOW" );  
+  Serial1.print("Read pin3 A1 ("); Serial1.print(((pinStruct *) outputPinsAddress)->Pin3 );
+  Serial1.print(") = ");
+  Serial1.println(digitalRead(((pinStruct *) outputPinsAddress)->Pin3) ? "HIGH" : "LOW" );  
 #endif
                  
   toggle = !toggle;
@@ -114,21 +114,21 @@ void setup()
   pinMode(myOutputPins.Pin2, INPUT_PULLUP);
   pinMode(myOutputPins.Pin3, INPUT_PULLUP);
     
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+  Serial1.begin(115200);
+  while (!Serial1 && millis() < 5000);
 
-  Serial.print(F("\nStarting Argument_Complex on ")); Serial.println(BOARD_NAME);
-  Serial.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial.print(F("CPU Frequency = ")); Serial.print(F_CPU / 1000000); Serial.println(F(" MHz"));
+  Serial1.print(F("\nStarting Argument_Complex on ")); Serial1.println(BOARD_NAME);
+  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
+  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
 
-  Serial.print(F("TCB Clock Frequency = ")); 
+  Serial1.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial.println(F("250KHz for lower accuracy but longer time"));
+  Serial1.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   // Timer TCB2 is used for micros(), millis(), delay(), etc and can't be used
@@ -136,10 +136,10 @@ void setup()
 
   if (CurrentTimer.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1, (unsigned int) &myOutputPins))
   {
-    Serial.print(F("Starting ITimer OK, millis() = ")); Serial.println(millis());
+    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
   }
   else
-    Serial.println(F("Can't set ITimer. Select another freq. or timer"));
+    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
 }
 
 void loop()

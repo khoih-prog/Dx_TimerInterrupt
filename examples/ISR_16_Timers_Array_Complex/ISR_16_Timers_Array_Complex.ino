@@ -30,8 +30,8 @@
 // Select USING_HALF_CLOCK      == true for  12/ 8MHz to Timer TCBx => shorter timer, but better accuracy
 // Select USING_250KHZ          == true for 250KHz to Timer TCBx => longer timer,  but worse  accuracy
 // Not select for default 250KHz to Timer TCBx => longer timer,  but worse accuracy
-#define USING_FULL_CLOCK      true
-#define USING_HALF_CLOCK      false
+#define USING_FULL_CLOCK      false
+#define USING_HALF_CLOCK      true
 #define USING_250KHZ          false         // Not supported now
 
 #define USE_TIMER_0           false
@@ -126,8 +126,8 @@ typedef void (*irqCallback) ();
     unsigned long previousMillis;
   } ISRTimerData;
   
-  // Avoid doing something fancy in ISR, for example Serial.print()
-  // The pure simple Serial.prints here are just for demonstration and testing. Must be eliminate in working environment
+  // Avoid doing something fancy in ISR, for example Serial1.print()
+  // The pure simple Serial1.prints here are just for demonstration and testing. Must be eliminate in working environment
   // Or you can get this run-time error / crash
   
   void doingSomething(int index);
@@ -298,20 +298,20 @@ void simpleTimerDoingSomething2s()
 
   unsigned long currMillis = millis();
 
-  Serial.print(F("SimpleTimer : "));Serial.print(SIMPLE_TIMER_MS / 1000);
-  Serial.print(F(", ms : ")); Serial.print(currMillis);
-  Serial.print(F(", Dms : ")); Serial.println(currMillis - previousMillis);
+  Serial1.print(F("SimpleTimer : "));Serial1.print(SIMPLE_TIMER_MS / 1000);
+  Serial1.print(F(", ms : ")); Serial1.print(currMillis);
+  Serial1.print(F(", Dms : ")); Serial1.println(currMillis - previousMillis);
 
   for (uint16_t i = 0; i < NUMBER_ISR_TIMERS; i++)
   {
 #if USE_COMPLEX_STRUCT    
-    Serial.print(F("Timer : ")); Serial.print(i);
-    Serial.print(F(", programmed : ")); Serial.print(curISRTimerData[i].TimerInterval);
-    Serial.print(F(", actual : ")); Serial.println(curISRTimerData[i].deltaMillis);
+    Serial1.print(F("Timer : ")); Serial1.print(i);
+    Serial1.print(F(", programmed : ")); Serial1.print(curISRTimerData[i].TimerInterval);
+    Serial1.print(F(", actual : ")); Serial1.println(curISRTimerData[i].deltaMillis);
 #else
-    Serial.print(F("Timer : ")); Serial.print(i);
-    Serial.print(F(", programmed : ")); Serial.print(TimerInterval[i]);
-    Serial.print(F(", actual : ")); Serial.println(deltaMillis[i]);
+    Serial1.print(F("Timer : ")); Serial1.print(i);
+    Serial1.print(F(", programmed : ")); Serial1.print(TimerInterval[i]);
+    Serial1.print(F(", actual : ")); Serial1.println(deltaMillis[i]);
 #endif    
   }
 
@@ -322,31 +322,31 @@ void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+  Serial1.begin(115200);
+  while (!Serial1 && millis() < 5000);
 
-  Serial.print(F("\nStarting ISR_16_Timers_Array_Complex on ")); Serial.println(BOARD_NAME);
-  Serial.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial.print(F("CPU Frequency = ")); Serial.print(F_CPU / 1000000); Serial.println(F(" MHz"));
+  Serial1.print(F("\nStarting ISR_16_Timers_Array_Complex on ")); Serial1.println(BOARD_NAME);
+  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
+  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
 
-  Serial.print(F("TCB Clock Frequency = ")); 
+  Serial1.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial.println(F("250KHz for lower accuracy but longer time"));
+  Serial1.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   CurrentTimer.init();
 
   if (CurrentTimer.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1))
   {
-    Serial.print(F("Starting  ITimer OK, millis() = ")); Serial.println(millis());
+    Serial1.print(F("Starting  ITimer OK, millis() = ")); Serial1.println(millis());
   }
   else
-    Serial.println(F("Can't set ITimer. Select another freq. or timer"));
+    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
 
   //ISR_Timer1.setInterval(2000L, doingSomething2s);
   //ISR_Timer1.setInterval(5000L, doingSomething5s);

@@ -134,8 +134,8 @@ typedef struct
   bool          beingUsed;
 } ISRTimerData;
 
-// Avoid doing something fancy in ISR, for example Serial.print()
-// The pure simple Serial.prints here are just for demonstration and testing. Must be eliminate in working environment
+// Avoid doing something fancy in ISR, for example Serial1.print()
+// The pure simple Serial1.prints here are just for demonstration and testing. Must be eliminate in working environment
 // Or you can get this run-time error / crash
 
 ///////////////////////////////////
@@ -191,21 +191,21 @@ void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+  Serial1.begin(115200);
+  while (!Serial1 && millis() < 5000);
 
-  Serial.print(F("\nStarting FakeAnalogWrite on ")); Serial.println(BOARD_NAME);
-  Serial.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial.print(F("CPU Frequency = ")); Serial.print(F_CPU / 1000000); Serial.println(F(" MHz"));
+  Serial1.print(F("\nStarting FakeAnalogWrite on ")); Serial1.println(BOARD_NAME);
+  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
+  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
 
-  Serial.print(F("TCB Clock Frequency = ")); 
+  Serial1.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial.println(F("250KHz for lower accuracy but longer time"));
+  Serial1.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   CurrentTimer.init();
@@ -213,10 +213,10 @@ void setup()
   //if (CurrentTimer.attachInterruptInterval(TIMER2_INTERVAL_MS, TimerHandler))
   if (CurrentTimer.attachInterrupt(TIMER2_FREQUENCY_HZ, TimerHandler))
   {
-    Serial.print(F("Starting ITimer OK, millis() = ")); Serial.println(millis());
+    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
   }
   else
-    Serial.println(F("Can't set ITimer. Select another freq. or timer"));
+    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
     
   // Just to demonstrate, don't use too many ISR Timers if not absolutely necessary
   // You can use up to 16 timer for each ISR_Timer
@@ -250,7 +250,7 @@ void fakeAnalogWrite(uint16_t pin, uint16_t value)
       if (curISRTimerData[i].PWM_PremapValue == localValue)
       {
 #if (LOCAL_DEBUG > 0)
-        Serial.print(F("Ignore : Same Value for index = ")); Serial.println(i);
+        Serial1.print(F("Ignore : Same Value for index = ")); Serial1.println(i);
 #endif
 
         return;
@@ -281,7 +281,7 @@ void fakeAnalogWrite(uint16_t pin, uint16_t value)
           }
 
 #if (LOCAL_DEBUG > 1)
-          Serial.print(F("localIndex = ")); Serial.println(localIndex);
+          Serial1.print(F("localIndex = ")); Serial1.println(localIndex);
 #endif
 
           // Can use map() function
@@ -294,10 +294,10 @@ void fakeAnalogWrite(uint16_t pin, uint16_t value)
 #endif
 
 #if (LOCAL_DEBUG > 0)
-          Serial.print(F("Update index = ")); Serial.print(i);
-          Serial.print(F(", pin = ")); Serial.print(pin);
-          Serial.print(F(", input PWM_Value = ")); Serial.print(value);
-          Serial.print(F(", mapped PWM_Value = ")); Serial.println(curISRTimerData[i].PWM_Value);
+          Serial1.print(F("Update index = ")); Serial1.print(i);
+          Serial1.print(F(", pin = ")); Serial1.print(pin);
+          Serial1.print(F(", input PWM_Value = ")); Serial1.print(value);
+          Serial1.print(F(", mapped PWM_Value = ")); Serial1.println(curISRTimerData[i].PWM_Value);
 #endif
         }
       }
@@ -347,7 +347,7 @@ void fakeAnalogWrite(uint16_t pin, uint16_t value)
         }
 
 #if (LOCAL_DEBUG > 1)
-        Serial.print(F("localIndex = ")); Serial.println(localIndex);
+        Serial1.print(F("localIndex = ")); Serial1.println(localIndex);
 #endif
 
         // Can use map() function
@@ -364,10 +364,10 @@ void fakeAnalogWrite(uint16_t pin, uint16_t value)
       pinMode(pin, OUTPUT);
 
 #if (LOCAL_DEBUG > 0)
-      Serial.print(F("Add index = ")); Serial.print(i);
-      Serial.print(F(", pin = ")); Serial.print(pin);
-      Serial.print(F(", input PWM_Value = ")); Serial.print(value);
-      Serial.print(F(", mapped PWM_Value = ")); Serial.println(curISRTimerData[i].PWM_Value);
+      Serial1.print(F("Add index = ")); Serial1.print(i);
+      Serial1.print(F(", pin = ")); Serial1.print(pin);
+      Serial1.print(F(", input PWM_Value = ")); Serial1.print(value);
+      Serial1.print(F(", mapped PWM_Value = ")); Serial1.println(curISRTimerData[i].PWM_Value);
 #endif
 
       return;
@@ -406,13 +406,13 @@ void loop()
     fakeAnalogWrite(A4, i * DIVIDER);
 
 #if (LOCAL_DEBUG > 0)
-    Serial.print(F("Test PWM_Value = ")); Serial.print(i * DIVIDER);
-    Serial.print(F(", max = ")); Serial.println(MAX_PWM_VALUE - 1);
+    Serial1.print(F("Test PWM_Value = ")); Serial1.print(i * DIVIDER);
+    Serial1.print(F(", max = ")); Serial1.println(MAX_PWM_VALUE - 1);
 #endif
 
     delay(DELAY_BETWEEN_CHANGE_MS);
   }
 
-  Serial.println(F("==================="));
+  Serial1.println(F("==================="));
   delay(REPEAT_INTERVAL_MS);
 }

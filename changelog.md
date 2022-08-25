@@ -9,6 +9,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.1.1](#release-v111)
   * [Release v1.1.0](#release-v110)
   * [Initial Release v1.0.0](#initial-release-v100)
 
@@ -16,6 +17,11 @@
 ---
 
 ## Changelog
+
+### Release v1.1.1
+
+1. Using Serial1 instead of Serial for debugging with Curiosity Nano AVRDA/AVRDB
+2. Update `README.md`
 
 ### Release v1.1.0
 

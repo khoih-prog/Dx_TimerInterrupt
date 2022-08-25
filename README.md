@@ -373,10 +373,10 @@ void setup()
 
   if (ITimer1.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1))
   {
-    Serial.print(F("Starting ITimer OK, millis() = ")); Serial.println(millis());
+    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
   }
   else
-    Serial.println(F("Can't set ITimer. Select another freq. or timer"));  
+    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));  
 }  
 ```
 
@@ -415,10 +415,10 @@ void setup()
   // Frequency in float Hz
   if (ITimer1.attachInterrupt(TIMER1_FREQ_HZ, TimerHandler1))
   {
-    Serial.print(F("Starting ITimer OK, millis() = ")); Serial.println(millis());
+    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
   }
   else
-    Serial.println("Can't set ITimer. Select another freq. or timer");
+    Serial1.println("Can't set ITimer. Select another freq. or timer");
 }  
 ```
 
@@ -480,8 +480,8 @@ void TimerHandler()
 #define TIMER_INTERVAL_11S            11000L
 #define TIMER_INTERVAL_101S           101000L
 
-// In AVR, avoid doing something fancy in ISR, for example complex Serial.print with String() argument
-// The pure simple Serial.prints here are just for demonstration and testing. Must be eliminate in working environment
+// In AVR, avoid doing something fancy in ISR, for example complex Serial1.print with String() argument
+// The pure simple Serial1.prints here are just for demonstration and testing. Must be eliminate in working environment
 // Or you can get this run-time error / crash
 void doingSomething2s()
 {
@@ -514,10 +514,10 @@ void setup()
   if (CurrentTimer.attachInterruptInterval(HW_TIMER_INTERVAL_MS, TimerHandler))
   {
     lastMillis = millis();
-    Serial.print(F("Starting ITimer OK, millis() = ")); Serial.println(millis());
+    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
   }
   else
-    Serial.println(F("Can't set ITimer correctly. Select another freq. or interval"));
+    Serial1.println(F("Can't set ITimer correctly. Select another freq. or interval"));
 
   // Just to demonstrate, don't use too many ISR Timers if not absolutely necessary
   // You can use up to 16 timer for each ISR_Timer
@@ -568,13 +568,13 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.0
-CPU Frequency = 16 MHz
-TCB Clock Frequency = 16MHz for highest accuracy
-Starting  ITimer OK, millis() = 6
-SimpleTimer : 2, ms : 10006, Dms : 10006
-Timer : 0, programmed : 5000, actual : 5006
-Timer : 1, programmed : 10000, actual : 10010
+Dx_TimerInterrupt v1.1.1
+CPU Frequency = 24 MHz
+TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
+Starting  ITimer OK, millis() = 13
+SimpleTimer : 2, ms : 10013, Dms : 10013
+Timer : 0, programmed : 5000, actual : 5017
+Timer : 1, programmed : 10000, actual : 10017
 Timer : 2, programmed : 15000, actual : 0
 Timer : 3, programmed : 20000, actual : 0
 Timer : 4, programmed : 25000, actual : 0
@@ -589,11 +589,11 @@ Timer : 12, programmed : 65000, actual : 0
 Timer : 13, programmed : 70000, actual : 0
 Timer : 14, programmed : 75000, actual : 0
 Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 20065, Dms : 10059
-Timer : 0, programmed : 5000, actual : 4994
-Timer : 1, programmed : 10000, actual : 9998
-Timer : 2, programmed : 15000, actual : 15014
-Timer : 3, programmed : 20000, actual : 20008
+SimpleTimer : 2, ms : 20072, Dms : 10059
+Timer : 0, programmed : 5000, actual : 5000
+Timer : 1, programmed : 10000, actual : 10000
+Timer : 2, programmed : 15000, actual : 15017
+Timer : 3, programmed : 20000, actual : 20017
 Timer : 4, programmed : 25000, actual : 0
 Timer : 5, programmed : 30000, actual : 0
 Timer : 6, programmed : 35000, actual : 0
@@ -606,108 +606,43 @@ Timer : 12, programmed : 65000, actual : 0
 Timer : 13, programmed : 70000, actual : 0
 Timer : 14, programmed : 75000, actual : 0
 Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 30125, Dms : 10060
-Timer : 0, programmed : 5000, actual : 4994
-Timer : 1, programmed : 10000, actual : 9998
-Timer : 2, programmed : 15000, actual : 14992
-Timer : 3, programmed : 20000, actual : 20008
-Timer : 4, programmed : 25000, actual : 25012
-Timer : 5, programmed : 30000, actual : 30006
-Timer : 6, programmed : 35000, actual : 0
-Timer : 7, programmed : 40000, actual : 0
-Timer : 8, programmed : 45000, actual : 0
-Timer : 9, programmed : 50000, actual : 0
-Timer : 10, programmed : 55000, actual : 0
-Timer : 11, programmed : 60000, actual : 0
-Timer : 12, programmed : 65000, actual : 0
-Timer : 13, programmed : 70000, actual : 0
+...
+
+
+SimpleTimer : 2, ms : 70376, Dms : 10062
+Timer : 0, programmed : 5000, actual : 5000
+Timer : 1, programmed : 10000, actual : 10000
+Timer : 2, programmed : 15000, actual : 15000
+Timer : 3, programmed : 20000, actual : 20000
+Timer : 4, programmed : 25000, actual : 24996
+Timer : 5, programmed : 30000, actual : 30000
+Timer : 6, programmed : 35000, actual : 35000
+Timer : 7, programmed : 40000, actual : 40013
+Timer : 8, programmed : 45000, actual : 45013
+Timer : 9, programmed : 50000, actual : 50013
+Timer : 10, programmed : 55000, actual : 55013
+Timer : 11, programmed : 60000, actual : 60013
+Timer : 12, programmed : 65000, actual : 65013
+Timer : 13, programmed : 70000, actual : 70013
 Timer : 14, programmed : 75000, actual : 0
 Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 40184, Dms : 10059
-Timer : 0, programmed : 5000, actual : 5004
-Timer : 1, programmed : 10000, actual : 10008
-Timer : 2, programmed : 15000, actual : 14992
-Timer : 3, programmed : 20000, actual : 20006
-Timer : 4, programmed : 25000, actual : 25012
-Timer : 5, programmed : 30000, actual : 30006
-Timer : 6, programmed : 35000, actual : 35010
-Timer : 7, programmed : 40000, actual : 40014
-Timer : 8, programmed : 45000, actual : 0
-Timer : 9, programmed : 50000, actual : 0
-Timer : 10, programmed : 55000, actual : 0
-Timer : 11, programmed : 60000, actual : 0
-Timer : 12, programmed : 65000, actual : 0
-Timer : 13, programmed : 70000, actual : 0
-Timer : 14, programmed : 75000, actual : 0
-Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 50245, Dms : 10061
-Timer : 0, programmed : 5000, actual : 5004
-Timer : 1, programmed : 10000, actual : 9998
-Timer : 2, programmed : 15000, actual : 15002
-Timer : 3, programmed : 20000, actual : 20006
+SimpleTimer : 2, ms : 80439, Dms : 10063
+Timer : 0, programmed : 5000, actual : 5000
+Timer : 1, programmed : 10000, actual : 10000
+Timer : 2, programmed : 15000, actual : 15000
+Timer : 3, programmed : 20000, actual : 20000
 Timer : 4, programmed : 25000, actual : 25000
-Timer : 5, programmed : 30000, actual : 30006
-Timer : 6, programmed : 35000, actual : 35010
-Timer : 7, programmed : 40000, actual : 40014
-Timer : 8, programmed : 45000, actual : 45008
-Timer : 9, programmed : 50000, actual : 50012
-Timer : 10, programmed : 55000, actual : 0
-Timer : 11, programmed : 60000, actual : 0
-Timer : 12, programmed : 65000, actual : 0
-Timer : 13, programmed : 70000, actual : 0
-Timer : 14, programmed : 75000, actual : 0
-Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 60307, Dms : 10062
-Timer : 0, programmed : 5000, actual : 5004
-Timer : 1, programmed : 10000, actual : 9998
-Timer : 2, programmed : 15000, actual : 15002
-Timer : 3, programmed : 20000, actual : 19996
-Timer : 4, programmed : 25000, actual : 25000
-Timer : 5, programmed : 30000, actual : 30004
-Timer : 6, programmed : 35000, actual : 35010
-Timer : 7, programmed : 40000, actual : 40014
-Timer : 8, programmed : 45000, actual : 45008
-Timer : 9, programmed : 50000, actual : 50012
-Timer : 10, programmed : 55000, actual : 55006
-Timer : 11, programmed : 60000, actual : 60010
-Timer : 12, programmed : 65000, actual : 0
-Timer : 13, programmed : 70000, actual : 0
-Timer : 14, programmed : 75000, actual : 0
-Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 70369, Dms : 10062
-Timer : 0, programmed : 5000, actual : 4994
-Timer : 1, programmed : 10000, actual : 9998
-Timer : 2, programmed : 15000, actual : 15002
-Timer : 3, programmed : 20000, actual : 19996
-Timer : 4, programmed : 25000, actual : 25000
-Timer : 5, programmed : 30000, actual : 30004
-Timer : 6, programmed : 35000, actual : 34998
-Timer : 7, programmed : 40000, actual : 40014
-Timer : 8, programmed : 45000, actual : 45008
-Timer : 9, programmed : 50000, actual : 50012
-Timer : 10, programmed : 55000, actual : 55006
-Timer : 11, programmed : 60000, actual : 60010
-Timer : 12, programmed : 65000, actual : 65014
-Timer : 13, programmed : 70000, actual : 70008
-Timer : 14, programmed : 75000, actual : 0
-Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 80432, Dms : 10063
-Timer : 0, programmed : 5000, actual : 4994
-Timer : 1, programmed : 10000, actual : 9998
-Timer : 2, programmed : 15000, actual : 15002
-Timer : 3, programmed : 20000, actual : 19996
-Timer : 4, programmed : 25000, actual : 25000
-Timer : 5, programmed : 30000, actual : 30004
-Timer : 6, programmed : 35000, actual : 34998
-Timer : 7, programmed : 40000, actual : 39992
-Timer : 8, programmed : 45000, actual : 45008
-Timer : 9, programmed : 50000, actual : 50012
-Timer : 10, programmed : 55000, actual : 55006
-Timer : 11, programmed : 60000, actual : 60010
-Timer : 12, programmed : 65000, actual : 65014
-Timer : 13, programmed : 70000, actual : 70008
-Timer : 14, programmed : 75000, actual : 75012
-Timer : 15, programmed : 80000, actual : 80016
+Timer : 5, programmed : 30000, actual : 30000
+Timer : 6, programmed : 35000, actual : 35000
+Timer : 7, programmed : 40000, actual : 40000
+Timer : 8, programmed : 45000, actual : 45013
+Timer : 9, programmed : 50000, actual : 50013
+Timer : 10, programmed : 55000, actual : 55013
+Timer : 11, programmed : 60000, actual : 60013
+Timer : 12, programmed : 65000, actual : 65013
+Timer : 13, programmed : 70000, actual : 70013
+Timer : 14, programmed : 75000, actual : 75013
+Timer : 15, programmed : 80000, actual : 80013
 ```
 
 ---
@@ -721,13 +656,13 @@ Timer : 15, programmed : 80000, actual : 80016
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.0
-CPU Frequency = 16 MHz
-TCB Clock Frequency = 16MHz for highest accuracy
-Starting  ITimer OK, millis() = 6
-SimpleTimer : 2, ms : 10007, Dms : 10007
-Timer : 0, programmed : 5000, actual : 5000
-Timer : 1, programmed : 10000, actual : 10006
+Dx_TimerInterrupt v1.1.1
+CPU Frequency = 24 MHz
+TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
+Starting  ITimer OK, millis() = 13
+SimpleTimer : 2, ms : 10013, Dms : 10013
+Timer : 0, programmed : 5000, actual : 5017
+Timer : 1, programmed : 10000, actual : 10017
 Timer : 2, programmed : 15000, actual : 0
 Timer : 3, programmed : 20000, actual : 0
 Timer : 4, programmed : 25000, actual : 0
@@ -742,11 +677,11 @@ Timer : 12, programmed : 65000, actual : 0
 Timer : 13, programmed : 70000, actual : 0
 Timer : 14, programmed : 75000, actual : 0
 Timer : 15, programmed : 80000, actual : 0
-SimpleTimer : 2, ms : 20066, Dms : 10059
+SimpleTimer : 2, ms : 20072, Dms : 10059
 Timer : 0, programmed : 5000, actual : 5000
 Timer : 1, programmed : 10000, actual : 10000
-Timer : 2, programmed : 15000, actual : 15006
-Timer : 3, programmed : 20000, actual : 20006
+Timer : 2, programmed : 15000, actual : 15017
+Timer : 3, programmed : 20000, actual : 20017
 Timer : 4, programmed : 25000, actual : 0
 Timer : 5, programmed : 30000, actual : 0
 Timer : 6, programmed : 35000, actual : 0
@@ -759,28 +694,27 @@ Timer : 12, programmed : 65000, actual : 0
 Timer : 13, programmed : 70000, actual : 0
 Timer : 14, programmed : 75000, actual : 0
 Timer : 15, programmed : 80000, actual : 0
-
 ...
 
 
-SimpleTimer : 2, ms : 211269, Dms : 10064
-Timer : 0, programmed : 5000, actual : 5000            <========== Very accurate @ clock 16MHz
+SimpleTimer : 2, ms : 70376, Dms : 10062
+Timer : 0, programmed : 5000, actual : 5000
 Timer : 1, programmed : 10000, actual : 10000
 Timer : 2, programmed : 15000, actual : 15000
 Timer : 3, programmed : 20000, actual : 20000
-Timer : 4, programmed : 25000, actual : 25000
+Timer : 4, programmed : 25000, actual : 24996
 Timer : 5, programmed : 30000, actual : 30000
 Timer : 6, programmed : 35000, actual : 35000
-Timer : 7, programmed : 40000, actual : 40000
-Timer : 8, programmed : 45000, actual : 45000
-Timer : 9, programmed : 50000, actual : 50000
-Timer : 10, programmed : 55000, actual : 55000
-Timer : 11, programmed : 60000, actual : 60000
-Timer : 12, programmed : 65000, actual : 65000
-Timer : 13, programmed : 70000, actual : 70000
-Timer : 14, programmed : 75000, actual : 75000
-Timer : 15, programmed : 80000, actual : 80000
-SimpleTimer : 2, ms : 221333, Dms : 10064
+Timer : 7, programmed : 40000, actual : 40013
+Timer : 8, programmed : 45000, actual : 45013
+Timer : 9, programmed : 50000, actual : 50013
+Timer : 10, programmed : 55000, actual : 55013
+Timer : 11, programmed : 60000, actual : 60013
+Timer : 12, programmed : 65000, actual : 65013
+Timer : 13, programmed : 70000, actual : 70013
+Timer : 14, programmed : 75000, actual : 0
+Timer : 15, programmed : 80000, actual : 0
+SimpleTimer : 2, ms : 80439, Dms : 10063
 Timer : 0, programmed : 5000, actual : 5000
 Timer : 1, programmed : 10000, actual : 10000
 Timer : 2, programmed : 15000, actual : 15000
@@ -789,14 +723,14 @@ Timer : 4, programmed : 25000, actual : 25000
 Timer : 5, programmed : 30000, actual : 30000
 Timer : 6, programmed : 35000, actual : 35000
 Timer : 7, programmed : 40000, actual : 40000
-Timer : 8, programmed : 45000, actual : 45000
-Timer : 9, programmed : 50000, actual : 50000
-Timer : 10, programmed : 55000, actual : 55000
-Timer : 11, programmed : 60000, actual : 60000
-Timer : 12, programmed : 65000, actual : 65000
-Timer : 13, programmed : 70000, actual : 70000
-Timer : 14, programmed : 75000, actual : 75000
-Timer : 15, programmed : 80000, actual : 80000
+Timer : 8, programmed : 45000, actual : 45013
+Timer : 9, programmed : 50000, actual : 50013
+Timer : 10, programmed : 55000, actual : 55013
+Timer : 11, programmed : 60000, actual : 60013
+Timer : 12, programmed : 65000, actual : 65013
+Timer : 13, programmed : 70000, actual : 70013
+Timer : 14, programmed : 75000, actual : 75013
+Timer : 15, programmed : 80000, actual : 80013
 
 ```
 
@@ -805,15 +739,14 @@ Timer : 15, programmed : 80000, actual : 80000
 ### 2.2. TCB Clock Frequency Half clock for high accuracy
 
 ```
-
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.0
-CPU Frequency = 16 MHz
+Dx_TimerInterrupt v1.1.1
+CPU Frequency = 24 MHz
 TCB Clock Frequency = Half clock (12/8MHz, etc.) for high accuracy
-Starting  ITimer OK, millis() = 10
-SimpleTimer : 2, ms : 10011, Dms : 10011
-Timer : 0, programmed : 5000, actual : 5000
-Timer : 1, programmed : 10000, actual : 10011
+Starting  ITimer OK, millis() = 12
+SimpleTimer : 2, ms : 10013, Dms : 10013
+Timer : 0, programmed : 5000, actual : 5015
+Timer : 1, programmed : 10000, actual : 10015
 Timer : 2, programmed : 15000, actual : 0
 Timer : 3, programmed : 20000, actual : 0
 Timer : 4, programmed : 25000, actual : 0
@@ -828,44 +761,42 @@ Timer : 12, programmed : 65000, actual : 0
 Timer : 13, programmed : 70000, actual : 0
 Timer : 14, programmed : 75000, actual : 0
 Timer : 15, programmed : 80000, actual : 0
-
-...
-
-
-SimpleTimer : 2, ms : 160949, Dms : 10064
-Timer : 0, programmed : 5000, actual : 5000            <========== Very accurate @ clock 8MHz
-Timer : 1, programmed : 10000, actual : 10000
-Timer : 2, programmed : 15000, actual : 15000
-Timer : 3, programmed : 20000, actual : 20000
-Timer : 4, programmed : 25000, actual : 25000
-Timer : 5, programmed : 30000, actual : 30000
-Timer : 6, programmed : 35000, actual : 35000
-Timer : 7, programmed : 40000, actual : 40000
-Timer : 8, programmed : 45000, actual : 45000
-Timer : 9, programmed : 50000, actual : 50000
-Timer : 10, programmed : 55000, actual : 55000
-Timer : 11, programmed : 60000, actual : 60000
-Timer : 12, programmed : 65000, actual : 65000
-Timer : 13, programmed : 70000, actual : 70000
-Timer : 14, programmed : 75000, actual : 75000
-Timer : 15, programmed : 80000, actual : 80000
-SimpleTimer : 2, ms : 171013, Dms : 10064
+SimpleTimer : 2, ms : 20072, Dms : 10059
 Timer : 0, programmed : 5000, actual : 5000
 Timer : 1, programmed : 10000, actual : 10000
-Timer : 2, programmed : 15000, actual : 15000
-Timer : 3, programmed : 20000, actual : 20000
-Timer : 4, programmed : 25000, actual : 25000
+Timer : 2, programmed : 15000, actual : 15015
+Timer : 3, programmed : 20000, actual : 20015
+Timer : 4, programmed : 25000, actual : 0
+Timer : 5, programmed : 30000, actual : 0
+Timer : 6, programmed : 35000, actual : 0
+Timer : 7, programmed : 40000, actual : 0
+Timer : 8, programmed : 45000, actual : 0
+Timer : 9, programmed : 50000, actual : 0
+Timer : 10, programmed : 55000, actual : 0
+Timer : 11, programmed : 60000, actual : 0
+Timer : 12, programmed : 65000, actual : 0
+Timer : 13, programmed : 70000, actual : 0
+Timer : 14, programmed : 75000, actual : 0
+Timer : 15, programmed : 80000, actual : 0
+...
+
+SimpleTimer : 2, ms : 80439, Dms : 10063
+Timer : 0, programmed : 5000, actual : 5000
+Timer : 1, programmed : 10000, actual : 10000
+Timer : 2, programmed : 15000, actual : 15001
+Timer : 3, programmed : 20000, actual : 20001
+Timer : 4, programmed : 25000, actual : 25001
 Timer : 5, programmed : 30000, actual : 30000
-Timer : 6, programmed : 35000, actual : 35000
-Timer : 7, programmed : 40000, actual : 40000
-Timer : 8, programmed : 45000, actual : 45000
-Timer : 9, programmed : 50000, actual : 50000
-Timer : 10, programmed : 55000, actual : 55000
-Timer : 11, programmed : 60000, actual : 60000
-Timer : 12, programmed : 65000, actual : 65000
-Timer : 13, programmed : 70000, actual : 70000
-Timer : 14, programmed : 75000, actual : 75000
-Timer : 15, programmed : 80000, actual : 80000
+Timer : 6, programmed : 35000, actual : 35001
+Timer : 7, programmed : 40000, actual : 40001
+Timer : 8, programmed : 45000, actual : 45015
+Timer : 9, programmed : 50000, actual : 50015
+Timer : 10, programmed : 55000, actual : 55015
+Timer : 11, programmed : 60000, actual : 60015
+Timer : 12, programmed : 65000, actual : 65016
+Timer : 13, programmed : 70000, actual : 70016
+Timer : 14, programmed : 75000, actual : 75016
+Timer : 15, programmed : 80000, actual : 80016
 ```
 
 ---
@@ -876,31 +807,58 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval_HF on AVR128DA
-Dx_TimerInterrupt v1.1.0
-CPU Frequency = 16 MHz
-TCB Clock Frequency = 16MHz for highest accuracy
-[TISR] TCB 1
-[TISR] ==================
-[TISR] Init, Timer = 1
-[TISR] CTRLB   = 0
-[TISR] CCMP    = 65535
-[TISR] INTCTRL = 0
-[TISR] CTRLA   = 1
-[TISR] ==================
-[TISR] Frequency = 10000.00 , CLK_TCB_FREQ = 16000000
-[TISR] setFrequency: _CCMPValueRemaining =  1600
+Dx_TimerInterrupt v1.1.1
+CPU Frequency = 24 MHz
+TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
 Starting ITimer OK, millis() = 12
-Frequency, Timer = 10000
-Time = 10001, Timer1Count = 99856
-Time = 20002, Timer1Count = 199807
-[TISR] Frequency = 5000.00 , CLK_TCB_FREQ = 16000000
-[TISR] setFrequency: _CCMPValueRemaining =  3200
-Changing Frequency, Timer = 5000
-Time = 30003, Timer1Count = 249792
-Time = 40004, Timer1Count = 299784
-[TISR] Frequency = 10000.00 , CLK_TCB_FREQ = 16000000
-[TISR] setFrequency: _CCMPValueRemaining =  1600
-Changing Frequency, Timer = 10000
+Frequency, Timer = 50
+Time = 1001, Timer1Count = 49
+Time = 2002, Timer1Count = 99
+Time = 3003, Timer1Count = 149
+Time = 4004, Timer1Count = 199
+Time = 5005, Timer1Count = 249
+Changing Frequency, Timer = 25
+Time = 6006, Timer1Count = 274
+Time = 7007, Timer1Count = 299
+Time = 8008, Timer1Count = 324
+Time = 9009, Timer1Count = 349
+Time = 10010, Timer1Count = 374
+Changing Frequency, Timer = 16
+Time = 11011, Timer1Count = 390
+Time = 12012, Timer1Count = 406
+Time = 13013, Timer1Count = 422
+Time = 14014, Timer1Count = 438
+Time = 15015, Timer1Count = 454
+Changing Frequency, Timer = 12
+Time = 16016, Timer1Count = 466
+Time = 17017, Timer1Count = 478
+Time = 18018, Timer1Count = 490
+Time = 19019, Timer1Count = 502
+Time = 20020, Timer1Count = 514
+Changing Frequency, Timer = 10
+Time = 21021, Timer1Count = 524
+Time = 22022, Timer1Count = 534
+Time = 23023, Timer1Count = 544
+Time = 24024, Timer1Count = 554
+Time = 25025, Timer1Count = 564
+Changing Frequency, Timer = 8
+Time = 26026, Timer1Count = 572
+Time = 27027, Timer1Count = 580
+Time = 28028, Timer1Count = 588
+Time = 29029, Timer1Count = 596
+Time = 30030, Timer1Count = 604
+Changing Frequency, Timer = 7
+Time = 31031, Timer1Count = 611
+Time = 32032, Timer1Count = 618
+Time = 33033, Timer1Count = 625
+Time = 34034, Timer1Count = 632
+Time = 35035, Timer1Count = 639
+Changing Frequency, Timer = 6
+Time = 36036, Timer1Count = 645
+Time = 37037, Timer1Count = 651
+Time = 38038, Timer1Count = 657
+Time = 39039, Timer1Count = 663
+Time = 40040, Timer1Count = 669
 ```
 
 ---
@@ -909,7 +867,7 @@ Changing Frequency, Timer = 10000
 
 ### Debug
 
-Debug is enabled by default on Serial.
+Debug is enabled by default on Serial1.
 
 You can also change the debugging level from 0 to 4
 
@@ -960,6 +918,8 @@ Submit issues to: [Dx_TimerInterrupt issues](https://github.com/khoih-prog/Dx_Ti
  7. Optimize library code by using `reference-passing` instead of `value-passing`
  8. Improve and customize examples for `Curiosity Nano AVRDA/AVRDB` boards to use on-board LED and SW
  9. Add notes `howto upload by drag-and-drop` to `CURIOSITY` virtual drive
+10. Using `Serial1` instead of `Serial` for debugging with **Curiosity Nano AVRDA/AVRDB**
+
 
 ---
 ---

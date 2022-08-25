@@ -79,8 +79,8 @@ volatile uint32_t Timer1Count = 0;
 
 void printResult(uint32_t currTime)
 {
-  Serial.print(F("Time = ")); Serial.print(currTime);
-  Serial.print(F(", Timer1Count = ")); Serial.println(Timer1Count);
+  Serial1.print(F("Time = ")); Serial1.print(currTime);
+  Serial1.print(F(", Timer1Count = ")); Serial1.println(Timer1Count);
 }
 
 void TimerHandler1()
@@ -96,23 +96,23 @@ void TimerHandler1()
 
 void setup()
 {
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+  Serial1.begin(115200);
+  while (!Serial1 && millis() < 5000);
 
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Serial.print(F("\nStarting Change_Interval_HF on ")); Serial.println(BOARD_NAME);
-  Serial.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial.print(F("CPU Frequency = ")); Serial.print(F_CPU / 1000000); Serial.println(F(" MHz"));
+  Serial1.print(F("\nStarting Change_Interval_HF on ")); Serial1.println(BOARD_NAME);
+  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
+  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
   
-  Serial.print(F("TCB Clock Frequency = ")); 
+  Serial1.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial.println(F("250KHz for lower accuracy but longer time"));
+  Serial1.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   // Timer2 is used for micros(), millis(), delay(), etc and can't be used
@@ -120,11 +120,11 @@ void setup()
 
   if (CurrentTimer.attachInterrupt(TIMER1_FREQUENCY, TimerHandler1))
   {
-    Serial.print(F("Starting ITimer OK, millis() = ")); Serial.println(millis());
-    Serial.print(F("Frequency, Timer = ")); Serial.println(TIMER1_FREQUENCY);
+    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    Serial1.print(F("Frequency, Timer = ")); Serial1.println(TIMER1_FREQUENCY);
   }
   else
-    Serial.println(F("Can't set ITimer. Select another freq. or timer"));
+    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
 }
 
 #define CHECK_INTERVAL_MS     1000L
@@ -154,7 +154,7 @@ void loop()
 
       CurrentTimer.setFrequency(TIMER1_FREQUENCY / (multFactor + 1), TimerHandler1);
 
-      Serial.print(F("Changing Frequency, Timer = ")); Serial.println(TIMER1_FREQUENCY / (multFactor + 1));
+      Serial1.print(F("Changing Frequency, Timer = ")); Serial1.println(TIMER1_FREQUENCY / (multFactor + 1));
 
       lastChangeTime = currTime;
     }

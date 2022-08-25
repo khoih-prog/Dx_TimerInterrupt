@@ -83,8 +83,8 @@ void TimerHandler1(unsigned int outputPin = LED_BUILTIN)
 
 #if (TIMER_INTERRUPT_DEBUG > 1)
   //timer interrupt toggles pin outputPin, default LED_BUILTIN
-  Serial.print("pin1 = "); Serial.print(outputPin);
-  Serial.print(" address: "); Serial.println((uint32_t) &outputPin );
+  Serial1.print("pin1 = "); Serial1.print(outputPin);
+  Serial1.print(" address: "); Serial1.println((uint32_t) &outputPin );
 #endif
   
   digitalWrite(outputPin, toggle);
@@ -95,21 +95,21 @@ void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
   
-  Serial.begin(115200);
-  while (!Serial && millis() < 5000);
+  Serial1.begin(115200);
+  while (!Serial1 && millis() < 5000);
 
-  Serial.print(F("\nStarting Argument_Simple on ")); Serial.println(BOARD_NAME);
-  Serial.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial.print(F("CPU Frequency = ")); Serial.print(F_CPU / 1000000); Serial.println(F(" MHz"));
+  Serial1.print(F("\nStarting Argument_Simple on ")); Serial1.println(BOARD_NAME);
+  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
+  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
 
-  Serial.print(F("TCB Clock Frequency = ")); 
+  Serial1.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial.println(F("250KHz for lower accuracy but longer time"));
+  Serial1.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   // Timer2 is used for micros(), millis(), delay(), etc and can't be used
@@ -117,15 +117,15 @@ void setup()
 
   if (CurrentTimer.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1, outputPin1))
   {
-    Serial.print(F("Starting ITimer OK, millis() = ")); Serial.println(millis());
+    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
 
 #if (TIMER_INTERRUPT_DEBUG > 1)    
-    Serial.print(F("OutputPin1 = ")); Serial.print(outputPin1);
-    Serial.print(F(" address: ")); Serial.println((uint32_t) &outputPin1 );
+    Serial1.print(F("OutputPin1 = ")); Serial1.print(outputPin1);
+    Serial1.print(F(" address: ")); Serial1.println((uint32_t) &outputPin1 );
 #endif    
   }
   else
-    Serial.println(F("Can't set ITimer. Select another freq. or timer"));
+    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
 }
 
 void loop()
