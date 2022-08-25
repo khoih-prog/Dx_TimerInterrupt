@@ -53,6 +53,15 @@
   #error You must select one Timer  
 #endif
 
+#if defined(__AVR_AVR128DA48__) 
+  #define SerialDebug   Serial1
+#elif defined(__AVR_AVR128DB48__) 
+  #define SerialDebug   Serial3
+#else
+  // standard Serial
+  #define SerialDebug   Serial
+#endif
+
 // To be included only in main(), .ino with setup() to avoid `Multiple Definitions` Linker Error
 #include "Dx_TimerInterrupt.hpp"
 

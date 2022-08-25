@@ -80,6 +80,15 @@ ISR_Timer ISR_Timer1;
   #endif
 #endif
 
+#if defined(__AVR_AVR128DA48__) 
+  #define SerialDebug   Serial1
+#elif defined(__AVR_AVR128DB48__) 
+  #define SerialDebug   Serial3
+#else
+  // standard Serial
+  #define SerialDebug   Serial
+#endif
+
 #define LED_TOGGLE_INTERVAL_MS        1000L
 
 // You have to use longer time here if having problem because Arduino AVR clock is low, 16MHz => lower accuracy.
@@ -146,12 +155,12 @@ void simpleTimerDoingSomething2s()
 
   unsigned long currMillis = millis();
 
-  Serial1.print(F("SimpleTimer : programmed ")); Serial1.print(SIMPLE_TIMER_MS);
-  Serial1.print(F("ms, current time ms : ")); Serial1.print(currMillis);
-  Serial1.print(F(", Delta ms : ")); Serial1.println(currMillis - previousMillis);
+  SerialDebug.print(F("SimpleTimer : programmed ")); SerialDebug.print(SIMPLE_TIMER_MS);
+  SerialDebug.print(F("ms, current time ms : ")); SerialDebug.print(currMillis);
+  SerialDebug.print(F(", Delta ms : ")); SerialDebug.println(currMillis - previousMillis);
 
-  Serial1.print(F("Timer2s actual : ")); Serial1.println(deltaMillis2s);
-  Serial1.print(F("Timer5s actual : ")); Serial1.println(deltaMillis5s);
+  SerialDebug.print(F("Timer2s actual : ")); SerialDebug.println(deltaMillis2s);
+  SerialDebug.print(F("Timer5s actual : ")); SerialDebug.println(deltaMillis5s);
   
   previousMillis = currMillis;
 }
@@ -162,31 +171,31 @@ void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Serial1.begin(115200);
-  while (!Serial1 && millis() < 5000);
+  SerialDebug.begin(115200);
+  while (!SerialDebug && millis() < 5000);
 
-  Serial1.print(F("\nStarting ISR_Timers_Array_Simple on ")); Serial1.println(BOARD_NAME);
-  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
+  SerialDebug.print(F("\nStarting ISR_Timers_Array_Simple on ")); SerialDebug.println(BOARD_NAME);
+  SerialDebug.println(DX_TIMER_INTERRUPT_VERSION);
+  SerialDebug.print(F("CPU Frequency = ")); SerialDebug.print(F_CPU / 1000000); SerialDebug.println(F(" MHz"));
 
-  Serial1.print(F("TCB Clock Frequency = ")); 
+  SerialDebug.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  SerialDebug.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  SerialDebug.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial1.println(F("250KHz for lower accuracy but longer time"));
+  SerialDebug.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   CurrentTimer.init();
 
   if (CurrentTimer.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1))
   {
-    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    SerialDebug.print(F("Starting ITimer OK, millis() = ")); SerialDebug.println(millis());
   }
   else
-    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
+    SerialDebug.println(F("Can't set ITimer. Select another freq. or timer"));
 
   ISR_Timer1.setInterval(2000L, doingSomething2s);
   ISR_Timer1.setInterval(5000L, doingSomething5s);

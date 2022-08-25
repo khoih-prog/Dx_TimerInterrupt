@@ -9,6 +9,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.1.2](#release-v112)
   * [Release v1.1.1](#release-v111)
   * [Release v1.1.0](#release-v110)
   * [Initial Release v1.0.0](#initial-release-v100)
@@ -17,6 +18,11 @@
 ---
 
 ## Changelog
+
+### Release v1.1.2
+
+1. Using `Serial3` for debugging with `Curiosity Nano AVRDB`, and `Serial1` for debugging with `Curiosity Nano AVRDA`
+
 
 ### Release v1.1.1
 

@@ -79,12 +79,21 @@
   #endif
 #endif
 
+#if defined(__AVR_AVR128DA48__) 
+  #define SerialDebug   Serial1
+#elif defined(__AVR_AVR128DB48__) 
+  #define SerialDebug   Serial3
+#else
+  // standard Serial
+  #define SerialDebug   Serial
+#endif
+
 void TimerHandler1(unsigned int outputPin = LED_BUILTIN)
 {
   static bool toggle = false;
 
 #if (TIMER_INTERRUPT_DEBUG > 1)
-  Serial1.print("ITimer called, millis() = "); Serial1.println(millis());
+  SerialDebug.print("ITimer called, millis() = "); SerialDebug.println(millis());
 #endif
 
   //timer interrupt toggles pin LED_BUILTIN
@@ -102,36 +111,36 @@ unsigned int outputPin1 = LED_BUILTIN;
 
 void setup()
 {
-  Serial1.begin(115200);
-  while (!Serial1 && millis() < 5000);
+  SerialDebug.begin(115200);
+  while (!SerialDebug && millis() < 5000);
 
   pinMode(outputPin1, OUTPUT);
 
-  Serial1.print(F("\nStarting TimerInterruptTest on ")); Serial1.println(BOARD_NAME);
-  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
+  SerialDebug.print(F("\nStarting TimerInterruptTest on ")); SerialDebug.println(BOARD_NAME);
+  SerialDebug.println(DX_TIMER_INTERRUPT_VERSION);
+  SerialDebug.print(F("CPU Frequency = ")); SerialDebug.print(F_CPU / 1000000); SerialDebug.println(F(" MHz"));
 
-  Serial1.print(F("TCB Clock Frequency = ")); 
+  SerialDebug.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  SerialDebug.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  SerialDebug.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial1.println(F("250KHz for lower accuracy but longer time"));
+  SerialDebug.println(F("250KHz for lower accuracy but longer time"));
 #endif
   
-  Serial1.print(F("CPU ADJUST_FACTOR = ")); Serial1.println(ADJUST_FACTOR);
+  SerialDebug.print(F("CPU ADJUST_FACTOR = ")); SerialDebug.println(ADJUST_FACTOR);
   
   // Timer2 is used for micros(), millis(), delay(), etc and can't be used
   CurrentTimer.init();
 
   if (CurrentTimer.attachInterruptInterval(TIMER1_INTERVAL_MS * ADJUST_FACTOR, TimerHandler1, outputPin1, TIMER1_DURATION_MS))
   {
-    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    SerialDebug.print(F("Starting ITimer OK, millis() = ")); SerialDebug.println(millis());
   }
   else
-    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
+    SerialDebug.println(F("Can't set ITimer. Select another freq. or timer"));
 }
 
 void loop()
@@ -146,8 +155,8 @@ void loop()
   {
     lastTimer1 = millis();
     // try reinit timer
-    Serial1.print(F("Re-enable ITimer, millis() = ")); Serial1.print(lastTimer1);
-    Serial1.print(F(" count = ")); Serial1.println(CurrentTimer.getCount());
+    SerialDebug.print(F("Re-enable ITimer, millis() = ")); SerialDebug.print(lastTimer1);
+    SerialDebug.print(F(" count = ")); SerialDebug.println(CurrentTimer.getCount());
 
     CurrentTimer.reattachInterrupt(TIMER1_DURATION_MS);
     timerPaused   = false;
@@ -157,8 +166,8 @@ void loop()
   {
     timerPaused = true;
 
-    Serial1.print(F("Pause ITimer, millis() = ")); Serial1.print(millis());
-    Serial1.print(F(" count = ")); Serial1.println(CurrentTimer.getCount());
+    SerialDebug.print(F("Pause ITimer, millis() = ")); SerialDebug.print(millis());
+    SerialDebug.print(F(" count = ")); SerialDebug.println(CurrentTimer.getCount());
     
     CurrentTimer.pauseTimer();
   }
@@ -166,8 +175,8 @@ void loop()
   {
     timerResumed = true;
     
-    Serial1.print(F("Resume ITimer, millis() = ")); Serial1.print(millis());
-    Serial1.print(F(" count = ")); Serial1.println(CurrentTimer.getCount());
+    SerialDebug.print(F("Resume ITimer, millis() = ")); SerialDebug.print(millis());
+    SerialDebug.print(F(" count = ")); SerialDebug.println(CurrentTimer.getCount());
     
     CurrentTimer.resumeTimer();
   }

@@ -73,21 +73,30 @@
   #endif
 #endif
 
+#if defined(__AVR_AVR128DA48__) 
+  #define SerialDebug   Serial1
+#elif defined(__AVR_AVR128DB48__) 
+  #define SerialDebug   Serial3
+#else
+  // standard Serial
+  #define SerialDebug   Serial
+#endif
+
 #define TIMER1_INTERVAL_MS        50UL
 
 volatile uint32_t Timer1Count = 1;
 
 void printResult(uint32_t currTime)
 {
-  Serial1.print(F("Time = ")); Serial1.print(currTime); 
-  Serial1.print(F(", Timer1Count = ")); Serial1.println(Timer1Count);
+  SerialDebug.print(F("Time = ")); SerialDebug.print(currTime); 
+  SerialDebug.print(F(", Timer1Count = ")); SerialDebug.println(Timer1Count);
 }
 
 void TimerHandler1()
 {
   static bool toggle = false;
 
-  // Flag for checking to be sure ISR is working as Serial1.print is not OK here in ISR
+  // Flag for checking to be sure ISR is working as SerialDebug.print is not OK here in ISR
   Timer1Count++;
 
   //timer interrupt toggles pin LED_BUILTIN
@@ -99,21 +108,21 @@ void setup()
 {
   pinMode(LED_BUILTIN, OUTPUT);
   
-  Serial1.begin(115200);
-  while (!Serial1 && millis() < 5000);
+  SerialDebug.begin(115200);
+  while (!SerialDebug && millis() < 5000);
 
-  Serial1.print(F("\nStarting Change_Interval on ")); Serial1.println(BOARD_NAME);
-  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
+  SerialDebug.print(F("\nStarting Change_Interval on ")); SerialDebug.println(BOARD_NAME);
+  SerialDebug.println(DX_TIMER_INTERRUPT_VERSION);
+  SerialDebug.print(F("CPU Frequency = ")); SerialDebug.print(F_CPU / 1000000); SerialDebug.println(F(" MHz"));
 
-  Serial1.print(F("TCB Clock Frequency = ")); 
+  SerialDebug.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  SerialDebug.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  SerialDebug.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial1.println(F("250KHz for lower accuracy but longer time"));
+  SerialDebug.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   // Timer TCB2 is used for micros(), millis(), delay(), etc and can't be used
@@ -121,10 +130,10 @@ void setup()
 
   if (CurrentTimer.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1))
   {
-    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    SerialDebug.print(F("Starting ITimer OK, millis() = ")); SerialDebug.println(millis());
   }
   else
-    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
+    SerialDebug.println(F("Can't set ITimer. Select another freq. or timer"));
 }
 
 #define CHECK_INTERVAL_MS     1000L
@@ -156,7 +165,7 @@ void loop()
 
       Timer1Count++;
 
-      Serial1.print(F("Changing Interval, Timer = ")); Serial1.println(TIMER1_INTERVAL_MS * (multFactor + 1)); 
+      SerialDebug.print(F("Changing Interval, Timer = ")); SerialDebug.println(TIMER1_INTERVAL_MS * (multFactor + 1)); 
      
       lastChangeTime = currTime;
     }

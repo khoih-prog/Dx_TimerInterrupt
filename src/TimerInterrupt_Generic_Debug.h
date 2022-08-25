@@ -12,13 +12,14 @@
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
 
-  Version: 1.1.1
+  Version: 1.1.2
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
   1.0.0   K.Hoang      23/08/2022 Initial coding to support AVR Dx (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore
   1.1.0   K.Hoang      24/08/2022 Improve and customize examples for Curiosity Nano AVRDA/AVRDB boards
   1.1.1   K.Hoang      24/08/2022 Using Serial1 instead of Serial for debugging with Curiosity Nano AVRDA/AVRDB
+  1.1.2   K.Hoang      24/08/2022 Using Serial3 for debugging with Curiosity Nano AVRDB
  *****************************************************************************************************************************/
 
 #pragma once

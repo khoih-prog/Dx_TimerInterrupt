@@ -83,6 +83,15 @@
 #define LED_ON     0
 #define LED_OFF    1
 
+#if defined(__AVR_AVR128DA48__) 
+  #define SerialDebug   Serial1
+#elif defined(__AVR_AVR128DB48__) 
+  #define SerialDebug   Serial3
+#else
+  // standard Serial
+  #define SerialDebug   Serial
+#endif
+
 // To modify according to your board
 // For Curiosity Nano AVR128DA48 => use SW => PIN_PC7
 // For Curiosity Nano AVR128DB48 => use SW => PIN_PB2
@@ -126,7 +135,7 @@ void TimerHandler1()
 #if (TIMER_INTERRUPT_DEBUG > 1)   
         SWPressedTime = currentMillis;
         
-        Serial1.print("SW Press, from millis() = "); Serial1.println(SWPressedTime);
+        SerialDebug.print("SW Press, from millis() = "); SerialDebug.println(SWPressedTime);
 #endif
 
         SWPressed = true;
@@ -142,9 +151,9 @@ void TimerHandler1()
         if (!SWLongPressed)
         {
 #if (TIMER_INTERRUPT_DEBUG > 1)
-          Serial1.print("SW Long Pressed, total time ms = "); Serial1.print(currentMillis);
-          Serial1.print(" - "); Serial1.print(SWPressedTime);
-          Serial1.print(" = "); Serial1.println(currentMillis - SWPressedTime);                                           
+          SerialDebug.print("SW Long Pressed, total time ms = "); SerialDebug.print(currentMillis);
+          SerialDebug.print(" - "); SerialDebug.print(SWPressedTime);
+          SerialDebug.print(" = "); SerialDebug.println(currentMillis - SWPressedTime);                                           
 #endif
 
           SWLongPressed = true;
@@ -164,7 +173,7 @@ void TimerHandler1()
       SWReleasedTime = currentMillis;
 
       // Call and flag SWPressed
-      Serial1.print("SW Released, from millis() = "); Serial1.println(SWReleasedTime);
+      SerialDebug.print("SW Released, from millis() = "); SerialDebug.println(SWReleasedTime);
 #endif
 
       SWPressed     = false;
@@ -177,8 +186,8 @@ void TimerHandler1()
 
       // Call and flag SWPressed
 #if (TIMER_INTERRUPT_DEBUG > 1)
-      Serial1.print("SW Pressed total time ms = ");
-      Serial1.println(SWReleasedTime - SWPressedTime);
+      SerialDebug.print("SW Pressed total time ms = ");
+      SerialDebug.println(SWReleasedTime - SWPressedTime);
 #endif
 
       debounceCountSWPressed = 0;
@@ -188,24 +197,24 @@ void TimerHandler1()
 
 void setup()
 {
-  Serial1.begin(115200);
-  while (!Serial1 && millis() < 5000);
+  SerialDebug.begin(115200);
+  while (!SerialDebug && millis() < 5000);
 
   pinMode(SWPin, INPUT_PULLUP);
   pinMode(LED_BUILTIN, OUTPUT);
 
-  Serial1.print(F("\nStarting SwitchDebounce on ")); Serial1.println(BOARD_NAME);
-  Serial1.println(DX_TIMER_INTERRUPT_VERSION);
-  Serial1.print(F("CPU Frequency = ")); Serial1.print(F_CPU / 1000000); Serial1.println(F(" MHz"));
+  SerialDebug.print(F("\nStarting SwitchDebounce on ")); SerialDebug.println(BOARD_NAME);
+  SerialDebug.println(DX_TIMER_INTERRUPT_VERSION);
+  SerialDebug.print(F("CPU Frequency = ")); SerialDebug.print(F_CPU / 1000000); SerialDebug.println(F(" MHz"));
 
-  Serial1.print(F("TCB Clock Frequency = ")); 
+  SerialDebug.print(F("TCB Clock Frequency = ")); 
 
 #if USING_FULL_CLOCK  
-  Serial1.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
+  SerialDebug.println(F("Full clock (24/16MHz, etc) for highest accuracy"));
 #elif USING_HALF_CLOCK  
-  Serial1.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
+  SerialDebug.println(F("Half clock (12/8MHz, etc.) for high accuracy"));
 #else
-  Serial1.println(F("250KHz for lower accuracy but longer time"));
+  SerialDebug.println(F("250KHz for lower accuracy but longer time"));
 #endif
 
   // Timer2 is used for micros(), millis(), delay(), etc and can't be used
@@ -213,10 +222,10 @@ void setup()
 
   if (CurrentTimer.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1))
   {
-    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    SerialDebug.print(F("Starting ITimer OK, millis() = ")); SerialDebug.println(millis());
   }
   else
-    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));
+    SerialDebug.println(F("Can't set ITimer. Select another freq. or timer"));
 }
 
 void loop()
