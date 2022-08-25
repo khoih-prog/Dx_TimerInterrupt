@@ -373,10 +373,10 @@ void setup()
 
   if (ITimer1.attachInterruptInterval(TIMER1_INTERVAL_MS, TimerHandler1))
   {
-    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    SerialDebug.print(F("Starting ITimer OK, millis() = ")); SerialDebug.println(millis());
   }
   else
-    Serial1.println(F("Can't set ITimer. Select another freq. or timer"));  
+    SerialDebug.println(F("Can't set ITimer. Select another freq. or timer"));  
 }  
 ```
 
@@ -415,10 +415,10 @@ void setup()
   // Frequency in float Hz
   if (ITimer1.attachInterrupt(TIMER1_FREQ_HZ, TimerHandler1))
   {
-    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    SerialDebug.print(F("Starting ITimer OK, millis() = ")); SerialDebug.println(millis());
   }
   else
-    Serial1.println("Can't set ITimer. Select another freq. or timer");
+    SerialDebug.println("Can't set ITimer. Select another freq. or timer");
 }  
 ```
 
@@ -480,8 +480,8 @@ void TimerHandler()
 #define TIMER_INTERVAL_11S            11000L
 #define TIMER_INTERVAL_101S           101000L
 
-// In AVR, avoid doing something fancy in ISR, for example complex Serial1.print with String() argument
-// The pure simple Serial1.prints here are just for demonstration and testing. Must be eliminate in working environment
+// In AVR, avoid doing something fancy in ISR, for example complex SerialDebug.print with String() argument
+// The pure simple SerialDebug.prints here are just for demonstration and testing. Must be eliminate in working environment
 // Or you can get this run-time error / crash
 void doingSomething2s()
 {
@@ -514,10 +514,10 @@ void setup()
   if (CurrentTimer.attachInterruptInterval(HW_TIMER_INTERVAL_MS, TimerHandler))
   {
     lastMillis = millis();
-    Serial1.print(F("Starting ITimer OK, millis() = ")); Serial1.println(millis());
+    SerialDebug.print(F("Starting ITimer OK, millis() = ")); SerialDebug.println(millis());
   }
   else
-    Serial1.println(F("Can't set ITimer correctly. Select another freq. or interval"));
+    SerialDebug.println(F("Can't set ITimer correctly. Select another freq. or interval"));
 
   // Just to demonstrate, don't use too many ISR Timers if not absolutely necessary
   // You can use up to 16 timer for each ISR_Timer
@@ -552,7 +552,7 @@ void setup()
 
 ### Example [ISR_16_Timers_Array_Complex](examples/ISR_16_Timers_Array_Complex)
 
-https://github.com/khoih-prog/Dx_TimerInterrupt/blob/76fc97c9e52fbc79a02db77f3f0e9d8842062a7a/examples/ISR_16_Timers_Array_Complex/ISR_16_Timers_Array_Complex.ino#L16-L384
+https://github.com/khoih-prog/Dx_TimerInterrupt/blob/5da293e180a3e313e0b98e888907fa8491eda101/examples/ISR_16_Timers_Array_Complex/ISR_16_Timers_Array_Complex.ino#L16-L393
 
 
 ---
@@ -568,7 +568,7 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.1
+Dx_TimerInterrupt v1.1.2
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
 Starting  ITimer OK, millis() = 13
@@ -656,7 +656,7 @@ Timer : 15, programmed : 80000, actual : 80013
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.1
+Dx_TimerInterrupt v1.1.2
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
 Starting  ITimer OK, millis() = 13
@@ -740,7 +740,7 @@ Timer : 15, programmed : 80000, actual : 80013
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.1
+Dx_TimerInterrupt v1.1.2
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Half clock (12/8MHz, etc.) for high accuracy
 Starting  ITimer OK, millis() = 12
@@ -807,7 +807,7 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval_HF on AVR128DA
-Dx_TimerInterrupt v1.1.1
+Dx_TimerInterrupt v1.1.2
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
 Starting ITimer OK, millis() = 12
@@ -867,7 +867,7 @@ Time = 40040, Timer1Count = 669
 
 ### Debug
 
-Debug is enabled by default on Serial1.
+Debug is enabled by default on `Serial1` for `Curiosity Nano AVRDA` and `Serial3` for `Curiosity Nano AVRDB`.
 
 You can also change the debugging level from 0 to 4
 
@@ -918,8 +918,7 @@ Submit issues to: [Dx_TimerInterrupt issues](https://github.com/khoih-prog/Dx_Ti
  7. Optimize library code by using `reference-passing` instead of `value-passing`
  8. Improve and customize examples for `Curiosity Nano AVRDA/AVRDB` boards to use on-board LED and SW
  9. Add notes `howto upload by drag-and-drop` to `CURIOSITY` virtual drive
-10. Using `Serial1` instead of `Serial` for debugging with **Curiosity Nano AVRDA/AVRDB**
-
+10. Using Serial3 for debugging with Curiosity Nano AVRDB, and Serial1 for debugging with Curiosity Nano AVRDA
 
 ---
 ---
