@@ -119,7 +119,7 @@ After drag-and-drop `Change_Interval.ino.hex` into `CURIOSITY` virtual drive, th
 
 
 <p align="center">
-    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/Curiosity_AVR128DA48.png">
+    <img src="https://github.com/khoih-prog/Dx_TimerInterrupt/blob/main/pics/CURIOSITY_drive.png">
 </p>
 
 
