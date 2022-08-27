@@ -568,7 +568,7 @@ While software timer, **programmed for 2s, is activated after more than 10.000s 
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.2
+Dx_TimerInterrupt v1.1.3
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
 Starting  ITimer OK, millis() = 13
@@ -656,7 +656,7 @@ Timer : 15, programmed : 80000, actual : 80013
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.2
+Dx_TimerInterrupt v1.1.3
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
 Starting  ITimer OK, millis() = 13
@@ -740,7 +740,7 @@ Timer : 15, programmed : 80000, actual : 80013
 
 ```
 Starting ISR_16_Timers_Array_Complex on AVR128DA
-Dx_TimerInterrupt v1.1.2
+Dx_TimerInterrupt v1.1.3
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Half clock (12/8MHz, etc.) for high accuracy
 Starting  ITimer OK, millis() = 12
@@ -807,7 +807,7 @@ The following is the sample terminal output when running example [Change_Interva
 
 ```
 Starting Change_Interval_HF on AVR128DA
-Dx_TimerInterrupt v1.1.2
+Dx_TimerInterrupt v1.1.3
 CPU Frequency = 24 MHz
 TCB Clock Frequency = Full clock (24/16MHz, etc) for highest accuracy
 Starting ITimer OK, millis() = 12
@@ -919,6 +919,9 @@ Submit issues to: [Dx_TimerInterrupt issues](https://github.com/khoih-prog/Dx_Ti
  8. Improve and customize examples for `Curiosity Nano AVRDA/AVRDB` boards to use on-board LED and SW
  9. Add notes `howto upload by drag-and-drop` to `CURIOSITY` virtual drive
 10. Using Serial3 for debugging with Curiosity Nano AVRDB, and Serial1 for debugging with Curiosity Nano AVRDA
+11. Fix bug giving error when using TCB0 (`USE_TIMER_0 == true`)
+12. Fix bug causing system crash when using `_TIMERINTERRUPT_LOGLEVEL_ > 0`
+
 
 ---
 ---

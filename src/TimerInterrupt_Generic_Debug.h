@@ -12,7 +12,7 @@
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
 
-  Version: 1.1.2
+  Version: 1.1.3
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -20,6 +20,7 @@
   1.1.0   K.Hoang      24/08/2022 Improve and customize examples for Curiosity Nano AVRDA/AVRDB boards
   1.1.1   K.Hoang      24/08/2022 Using Serial1 instead of Serial for debugging with Curiosity Nano AVRDA/AVRDB
   1.1.2   K.Hoang      24/08/2022 Using Serial3 for debugging with Curiosity Nano AVRDB
+  1.1.3   K.Hoang      27/08/2022 Fix TCB0 disable bug
  *****************************************************************************************************************************/
 
 #pragma once

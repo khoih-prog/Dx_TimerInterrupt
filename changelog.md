@@ -9,6 +9,7 @@
 ## Table of Contents
 
 * [Changelog](#changelog)
+  * [Release v1.1.3](#release-v113)
   * [Release v1.1.2](#release-v112)
   * [Release v1.1.1](#release-v111)
   * [Release v1.1.0](#release-v110)
@@ -18,6 +19,11 @@
 ---
 
 ## Changelog
+
+### Release v1.1.3
+
+1. Fix bug giving error when using TCB0 (`USE_TIMER_0 == true`)
+2. Fix bug causing system crash when using `_TIMERINTERRUPT_LOGLEVEL_ > 0`
 
 ### Release v1.1.2
 

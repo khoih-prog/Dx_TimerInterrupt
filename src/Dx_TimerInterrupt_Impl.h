@@ -12,7 +12,7 @@
   Therefore, their executions are not blocked by bad-behaving functions / tasks.
   This important feature is absolutely necessary for mission-critical tasks.
 
-  Version: 1.1.2
+  Version: 1.1.3
 
   Version Modified By   Date      Comments
   ------- -----------  ---------- -----------
@@ -20,6 +20,7 @@
   1.1.0   K.Hoang      24/08/2022 Improve and customize examples for Curiosity Nano AVRDA/AVRDB boards
   1.1.1   K.Hoang      24/08/2022 Using Serial1 instead of Serial for debugging with Curiosity Nano AVRDA/AVRDB
   1.1.2   K.Hoang      24/08/2022 Using Serial3 for debugging with Curiosity Nano AVRDB
+  1.1.3   K.Hoang      27/08/2022 Fix TCB0 disable bug
 ****************************************************************************************************************************/
 
 #pragma once
@@ -168,17 +169,7 @@ void TimerInterrupt::init(const int8_t& timer)
   TimerTCB[timer]->CCMP     = MAX_COUNT_16BIT;                            // Value to compare with.
   TimerTCB[timer]->INTCTRL  &= ~TCB_CAPT_bm;                              // Disable the interrupt
   TimerTCB[timer]->CTRLA    = TCB_CLKSEL_VALUE | TCB_ENABLE_bm;           // Use Timer A as clock, enable timer
-
-  TISR_LOGWARN1(F("TCB"), timer);
   
-  TISR_LOGINFO(F("=================="));
-  TISR_LOGINFO1(F("Init, Timer = "), timer);
-  TISR_LOGINFO1(F("CTRLB   = "), TimerTCB[timer]->CTRLB);
-  TISR_LOGINFO1(F("CCMP    = "), TimerTCB[timer]->CCMP);
-  TISR_LOGINFO1(F("INTCTRL = "), TimerTCB[timer]->INTCTRL);
-  TISR_LOGINFO1(F("CTRLA   = "), TimerTCB[timer]->CTRLA);
-  TISR_LOGINFO(F("=================="));
-   
   _timer = timer;
 
   interrupts();
@@ -201,15 +192,7 @@ void TimerInterrupt::set_CCMP()
   TimerTCB[_timer]->CCMP    = _CCMPValueToUse;    // Value to compare with.
   
   TimerTCB[_timer]->INTCTRL = TCB_CAPT_bm; // Enable the interrupt
-  
-  TISR_LOGDEBUG(F("=================="));
-  TISR_LOGDEBUG1(F("set_CCMP, Timer = "), _timer);
-  TISR_LOGDEBUG1(F("CTRLB   = "), TimerTCB[_timer]->CTRLB);
-  TISR_LOGDEBUG1(F("CCMP    = "), TimerTCB[_timer]->CCMP);
-  TISR_LOGDEBUG1(F("INTCTRL = "), TimerTCB[_timer]->INTCTRL);
-  TISR_LOGDEBUG1(F("CTRLA   = "), TimerTCB[_timer]->CTRLA);
-  TISR_LOGDEBUG(F("=================="));
-  
+    
   // Flag _CCMPValue == 0 => end of long timer
   if (_CCMPValueRemaining == 0)
     _timerDone = true;
@@ -226,10 +209,8 @@ bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callb
   float frequencyLimit = frequency * 17179.840;
 
   // Limit frequency to larger than (0.00372529 / 64) Hz or interval 17179.840s / 17179840 ms to avoid uint32_t overflow
-  if ((_timer <= 0) || (callback == NULL) || ((frequencyLimit) < 1) )
-  {
-    TISR_LOGDEBUG(F("setFrequency error"));
-    
+  if ((_timer < 0) || (callback == NULL) || ((frequencyLimit) < 1) )
+  {    
     return false;
   }
   else      
@@ -238,14 +219,9 @@ bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callb
     if (duration > 0)
     {   
       _toggle_count = frequency * duration / 1000;
-
-      TISR_LOGINFO1(F("setFrequency => _toggle_count = "), _toggle_count);
-      TISR_LOGINFO3(F("Frequency ="), frequency, F(", duration = "), duration);
            
       if (_toggle_count < 1)
-      {
-        TISR_LOGDEBUG(F("setFrequency: _toggle_count < 1 error"));
-        
+      {        
         return false;
       }
     }
@@ -265,9 +241,6 @@ bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callb
     _timerDone = false;
     
     _CCMPValue = _CCMPValueRemaining = (uint32_t) (CLK_TCB_FREQ / frequency);
-
-    TISR_LOGINFO3(F("Frequency = "), frequency, F(", CLK_TCB_FREQ = "), CLK_TCB_FREQ);
-    TISR_LOGINFO1(F("setFrequency: _CCMPValueRemaining = "), _CCMPValueRemaining);
                 
     // Set the CCMP for the given timer,
     // set the toggle count,
@@ -381,9 +354,7 @@ void TimerInterrupt::resumeTimer()
         if (countLocal != 0)
         {
           if (ITimer0.checkTimerDone())
-          {  
-            TISR_LOGDEBUG3(F("T0 callback, _CCMPValueRemaining = "), ITimer0.get_CCMPValueRemaining(), F(", millis = "), millis());
-            
+          {              
             ITimer0.callback();
             
             if (ITimer0.get_CCMPValue() > MAX_COUNT_16BIT)            
@@ -404,9 +375,7 @@ void TimerInterrupt::resumeTimer()
           }
         }
         else
-        {
-          TISR_LOGWARN(F("T0 done"));
-          
+        {          
           ITimer0.detachInterrupt();
         }
       }
@@ -437,9 +406,7 @@ void TimerInterrupt::resumeTimer()
       if (countLocal != 0)
       {
         if (ITimer1.checkTimerDone())
-        {
-          TISR_LOGDEBUG3(F("T1 callback, _CCMPValueRemaining = "), ITimer1.get_CCMPValueRemaining(), F(", millis = "), millis());
-          
+        {          
           ITimer1.callback();
           
           if (ITimer1.get_CCMPValue() > MAX_COUNT_16BIT)
@@ -461,8 +428,6 @@ void TimerInterrupt::resumeTimer()
       }
       else
       {
-        TISR_LOGWARN(F("T1 done"));
-        
         ITimer1.detachInterrupt();
       }
     }
@@ -491,9 +456,7 @@ void TimerInterrupt::resumeTimer()
       if (countLocal != 0)
       {
         if (ITimer2.checkTimerDone())
-        {
-          TISR_LOGDEBUG3(F("T2 callback, _CCMPValueRemaining = "), ITimer2.get_CCMPValueRemaining(), F(", millis = "), millis());
-           
+        {           
           ITimer2.callback();
           
           if (ITimer2.get_CCMPValue() > MAX_COUNT_16BIT)
@@ -514,9 +477,7 @@ void TimerInterrupt::resumeTimer()
         }          
       }    
       else
-      {
-        TISR_LOGWARN(F("T2 done"));
-        
+      {        
         ITimer2.detachInterrupt();
       }
     }
@@ -545,9 +506,7 @@ void TimerInterrupt::resumeTimer()
         if (countLocal != 0)
         {
           if (ITimer3.checkTimerDone())
-          { 
-            TISR_LOGDEBUG3(F("T3 callback, _CCMPValueRemaining = "), ITimer3.get_CCMPValueRemaining(), F(", millis = "), millis());
-            
+          {             
             ITimer3.callback();
             
             if (ITimer3.get_CCMPValue() > MAX_COUNT_16BIT)
@@ -568,9 +527,7 @@ void TimerInterrupt::resumeTimer()
           }
         }
         else
-        {
-          TISR_LOGWARN(F("T3 done"));
-          
+        {          
           ITimer3.detachInterrupt();
         }
       }
@@ -600,9 +557,7 @@ void TimerInterrupt::resumeTimer()
         if (countLocal != 0)
         {
           if (ITimer4.checkTimerDone())
-          { 
-            TISR_LOGDEBUG3(F("T4 callback, _CCMPValueRemaining = "), ITimer4.get_CCMPValueRemaining(), F(", millis = "), millis());
-            
+          {             
             ITimer4.callback();
             
             if (ITimer4.get_CCMPValue() > MAX_COUNT_16BIT)
@@ -623,9 +578,7 @@ void TimerInterrupt::resumeTimer()
           }
         }
         else
-        {
-          TISR_LOGWARN(F("T4 done"));
-          
+        {          
           ITimer4.detachInterrupt();
         }
       }
