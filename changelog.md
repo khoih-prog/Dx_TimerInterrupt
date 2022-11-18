@@ -42,7 +42,7 @@
 
 ### Initial Release v1.0.0
 
-1. Intial release to support Arduino **AVRDx-based boards (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore**
+1. Initial release to support Arduino **AVRDx-based boards (AVR128Dx, AVR64Dx, AVR32Dx, etc.) using DxCore**
 
 
 
