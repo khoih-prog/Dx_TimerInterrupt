@@ -36,24 +36,24 @@
 
 /*****************************************************************************************
 
-// From ~/.arduino15/packages/arduino/7.3.0-atmel3.6.1-arduino5/avr/include/avr/iom4809.h
+  // From ~/.arduino15/packages/arduino/7.3.0-atmel3.6.1-arduino5/avr/include/avr/iom4809.h
 
-//#define TCB0                  (*(TCB_t *) 0x0A80) // 16-bit Timer Type B
-//#define TCB1                  (*(TCB_t *) 0x0A90) // 16-bit Timer Type B
-//#define TCB2                  (*(TCB_t *) 0x0AA0) // 16-bit Timer Type B
-//#define TCB3                  (*(TCB_t *) 0x0AB0) // 16-bit Timer Type B
+  //#define TCB0                  (*(TCB_t *) 0x0A80) // 16-bit Timer Type B
+  //#define TCB1                  (*(TCB_t *) 0x0A90) // 16-bit Timer Type B
+  //#define TCB2                  (*(TCB_t *) 0x0AA0) // 16-bit Timer Type B
+  //#define TCB3                  (*(TCB_t *) 0x0AB0) // 16-bit Timer Type B
 
-//
-typedef enum TCB_CLKSEL_enum
-{
+  //
+  typedef enum TCB_CLKSEL_enum
+  {
     TCB_CLKSEL_CLKDIV1_gc = (0x00<<1),  // CLK_PER (No Prescaling)
     TCB_CLKSEL_CLKDIV2_gc = (0x01<<1),  // CLK_PER/2 (From Prescaler)
     TCB_CLKSEL_CLKTCA_gc = (0x02<<1),   // Use Clock from TCA
-} TCB_CLKSEL_t;
+  } TCB_CLKSEL_t;
 
-//
-typedef enum TCB_CNTMODE_enum
-{
+  //
+  typedef enum TCB_CNTMODE_enum
+  {
     TCB_CNTMODE_INT_gc = (0x00<<0),       // Periodic Interrupt
     TCB_CNTMODE_TIMEOUT_gc = (0x01<<0),   // Periodic Timeout
     TCB_CNTMODE_CAPT_gc = (0x02<<0),      // Input Capture Event
@@ -62,47 +62,47 @@ typedef enum TCB_CNTMODE_enum
     TCB_CNTMODE_FRQPW_gc = (0x05<<0),     // Input Capture Frequency and Pulse-Width measurement
     TCB_CNTMODE_SINGLE_gc = (0x06<<0),    // Single Shot
     TCB_CNTMODE_PWM8_gc = (0x07<<0),      // 8-bit PWM
-} TCB_CNTMODE_t;
+  } TCB_CNTMODE_t;
 
 *****************************************************************************************/
 
 /*****************************************************************************************
 
-// From https://github.com/SpenceKonde/DxCore/blob/master/megaavr/cores/dxcore/Arduino.h#L455-L462
+  // From https://github.com/SpenceKonde/DxCore/blob/master/megaavr/cores/dxcore/Arduino.h#L455-L462
 
-#define TIMERA0         (0x10) // A "simple" type A timer mapping doesn't get constants for the WO channels.
-#define TIMERA1         (0x08) // Formerly 0x11 - giving it a dedicated bit makes the takeover tracking easy and efficient instead of being a morass of tests and bitmath.
-#define TIMERB0         (0x20) // TCB0
-#define TIMERB1         (0x21) // TCB1
-#define TIMERB2         (0x22) // TCB2
-#define TIMERB3         (0x23) // TCB3
-#define TIMERB4         (0x24) // TCB4
-#define TIMERD0         (0x70) // If any of these bits match it's potentially on TCD0
+  #define TIMERA0         (0x10) // A "simple" type A timer mapping doesn't get constants for the WO channels.
+  #define TIMERA1         (0x08) // Formerly 0x11 - giving it a dedicated bit makes the takeover tracking easy and efficient instead of being a morass of tests and bitmath.
+  #define TIMERB0         (0x20) // TCB0
+  #define TIMERB1         (0x21) // TCB1
+  #define TIMERB2         (0x22) // TCB2
+  #define TIMERB3         (0x23) // TCB3
+  #define TIMERB4         (0x24) // TCB4
+  #define TIMERD0         (0x70) // If any of these bits match it's potentially on TCD0
 
 *****************************************************************************************/
 
 #if defined(TCB4)
-  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning TCB0-TCB4 Timers available
-  #endif
-    
-  TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2, &TCB3, &TCB4 };
-  
+#if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
+  #warning TCB0-TCB4 Timers available
+#endif
+
+TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2, &TCB3, &TCB4 };
+
 #elif defined(TCB3)
-  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning TCB0-TCB3 Timers available
-  #endif
-    
-  TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2, &TCB3 };
-  
+#if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
+  #warning TCB0-TCB3 Timers available
+#endif
+
+TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2, &TCB3 };
+
 #else
-  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-    #warning TCB0-TCB2 Timers available
-  #endif
-    
-  TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2 };  
-  
-#endif  
+#if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
+  #warning TCB0-TCB2 Timers available
+#endif
+
+TCB_t* TimerTCB[ NUM_HW_TIMERS ] = { &TCB0, &TCB1, &TCB2 };
+
+#endif
 
 
 //////////////////////////////////////////////
@@ -117,63 +117,63 @@ typedef enum TCB_CNTMODE_enum
   #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
     #warning Using no prescaler => FULL_CLOCK (24MHz, 16MHz, etc)
   #endif
-  
+
   #define TCB_CLKSEL_VALUE      TCB_CLKSEL_DIV1_gc
   #define CLOCK_PRESCALER       1
-  
+
 #elif USING_HALF_CLOCK
   // Use prescaler 2 => 12/8MHz, etc.
   #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
     #warning Using prescaler 2 => HALF_CLOCK (12MHz, 8MHz, etc.)
   #endif
-  
+
   #define TCB_CLKSEL_VALUE      TCB_CLKSEL_DIV2_gc
   #define CLOCK_PRESCALER       2
 
-// No TCB_CLKSEL_CLKTCA_gc in DXCore ???
-// Don't use 250KHz now
+  // No TCB_CLKSEL_CLKTCA_gc in DXCore ???
+  // Don't use 250KHz now
 #elif USING_250KHZ
-		// Optional, but for clarity
-		// Use Timer A as clock (prescaler 64) => 250KHz
-		#define TCB_CLKSEL_VALUE      TCB_CLKSEL_CLKTCA_gc 
-		#define CLOCK_PRESCALER       64
-		
-		#error Not OK now. Do not use
-		
+  // Optional, but for clarity
+  // Use Timer A as clock (prescaler 64) => 250KHz
+  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_CLKTCA_gc
+  #define CLOCK_PRESCALER       64
+
+  #error Not OK now. Do not use
+
 #else
-	// Use prescaler 2 => 8MHz
-	#if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
-	  #warning Using prescaler 2 => 8MHz
-	#endif
-	
-	#define TCB_CLKSEL_VALUE      TCB_CLKSEL_DIV2_gc
-	#define CLOCK_PRESCALER       2
-	
+  // Use prescaler 2 => 8MHz
+  #if (_TIMERINTERRUPT_LOGLEVEL_ > 2)
+    #warning Using prescaler 2 => 8MHz
+  #endif
+
+  #define TCB_CLKSEL_VALUE      TCB_CLKSEL_DIV2_gc
+  #define CLOCK_PRESCALER       2
+
 #endif
-  
+
 #define CLK_TCB_FREQ          ( F_CPU / CLOCK_PRESCALER )
 
 //////////////////////////////////////////////
 
 void TimerInterrupt::init(const int8_t& timer)
-{    
+{
   // Set timer specific stuff
   // All timers in CTC mode
   // 8 bit timers will require changing prescalar values,
   // whereas 16 bit timers are set to either ck/1 or ck/64 prescalar
-  
+
   noInterrupts();
-   
+
   // 16 bit timer
   TimerTCB[timer]->CTRLB    = TCB_CNTMODE_INT_gc;                         // Use timer compare mode
   TimerTCB[timer]->CCMP     = MAX_COUNT_16BIT;                            // Value to compare with.
   TimerTCB[timer]->INTCTRL  &= ~TCB_CAPT_bm;                              // Disable the interrupt
   TimerTCB[timer]->CTRLA    = TCB_CLKSEL_VALUE | TCB_ENABLE_bm;           // Use Timer A as clock, enable timer
-  
+
   _timer = timer;
 
   interrupts();
-  
+
 }
 
 //////////////////////////////////////////////
@@ -185,14 +185,14 @@ void TimerInterrupt::set_CCMP()
   // set the toggle count,
   // then turn on the interrupts
   uint32_t _CCMPValueToUse;
-  
+
   _CCMPValueToUse = min(MAX_COUNT_16BIT, _CCMPValueRemaining);
   _CCMPValueRemaining -= _CCMPValueToUse;
-   
+
   TimerTCB[_timer]->CCMP    = _CCMPValueToUse;    // Value to compare with.
-  
+
   TimerTCB[_timer]->INTCTRL = TCB_CAPT_bm; // Enable the interrupt
-    
+
   // Flag _CCMPValue == 0 => end of long timer
   if (_CCMPValueRemaining == 0)
     _timerDone = true;
@@ -203,25 +203,26 @@ void TimerInterrupt::set_CCMP()
 
 // frequency (in hertz) and duration (in milliseconds).
 // Return true if frequency is OK with selected timer (CCMPValue is in range)
-bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callback, const uint32_t& params, const unsigned long& duration)
-{ 
+bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callback, const uint32_t& params,
+                                  const unsigned long& duration)
+{
   //frequencyLimit must > 1
   float frequencyLimit = frequency * 17179.840;
 
   // Limit frequency to larger than (0.00372529 / 64) Hz or interval 17179.840s / 17179840 ms to avoid uint32_t overflow
   if ((_timer < 0) || (callback == NULL) || ((frequencyLimit) < 1) )
-  {    
+  {
     return false;
   }
-  else      
-  {       
+  else
+  {
     // Calculate the toggle count. Duration must be at least longer then one cycle
     if (duration > 0)
-    {   
+    {
       _toggle_count = frequency * duration / 1000;
-           
+
       if (_toggle_count < 1)
-      {        
+      {
         return false;
       }
     }
@@ -229,7 +230,7 @@ bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callb
     {
       _toggle_count = -1;
     }
-      
+
     //Timer0-4 are 16 bit timers, meaning it can store a maximum counter value of 65535.
 
     noInterrupts();
@@ -239,14 +240,14 @@ bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callb
     _params    = reinterpret_cast<void*>(params);
 
     _timerDone = false;
-    
+
     _CCMPValue = _CCMPValueRemaining = (uint32_t) (CLK_TCB_FREQ / frequency);
-                
+
     // Set the CCMP for the given timer,
     // set the toggle count,
-    // then turn on the interrupts     
+    // then turn on the interrupts
     set_CCMP();
-    
+
     interrupts();
 
     return true;
@@ -258,12 +259,12 @@ bool TimerInterrupt::setFrequency(const float& frequency, timer_callback_p callb
 void TimerInterrupt::detachInterrupt()
 {
   noInterrupts();
-     
+
   // Clear interrupt flag
   TimerTCB[_timer]->INTFLAGS = TCB_CAPT_bm;
   TimerTCB[_timer]->INTCTRL  &= ~TCB_CAPT_bm;    // Disable the interrupt
   TimerTCB[_timer]->CTRLA    &= ~TCB_ENABLE_bm;  // Disable timer
-  
+
   interrupts();
 }
 
@@ -283,11 +284,11 @@ void TimerInterrupt::reattachInterrupt(const unsigned long& duration)
   {
     _toggle_count = -1;
   }
-    
-  // Set interrupt flag 
+
+  // Set interrupt flag
   TimerTCB[_timer]->INTCTRL  |= TCB_CAPT_bm;    // Enable the interrupt
   TimerTCB[_timer]->CTRLA    |= TCB_ENABLE_bm;  // Enable timer
-  
+
   interrupts();
 }
 
@@ -296,7 +297,7 @@ void TimerInterrupt::reattachInterrupt(const unsigned long& duration)
 // Just stop clock source, still keep the count
 // To fix this.
 void TimerInterrupt::pauseTimer()
-{ 
+{
   detachInterrupt();
 }
 
@@ -304,7 +305,7 @@ void TimerInterrupt::pauseTimer()
 
 // Just reconnect clock source, continue from the current count
 void TimerInterrupt::resumeTimer()
-{ 
+{
   reattachInterrupt();
 }
 
@@ -340,102 +341,102 @@ void TimerInterrupt::resumeTimer()
 ////////////////////////////////////////////////////////////////////////////////
 
 #if USE_TIMER_0
-  #ifndef TIMER0_INSTANTIATED
-    // To force pre-instantiate only once
-    #define TIMER0_INSTANTIATED
-    TimerInterrupt ITimer0(HW_TIMER_0);
-    
-    ISR(TCB0_INT_vect)
+#ifndef TIMER0_INSTANTIATED
+// To force pre-instantiate only once
+#define TIMER0_INSTANTIATED
+TimerInterrupt ITimer0(HW_TIMER_0);
+
+ISR(TCB0_INT_vect)
+{
+  long countLocal = ITimer0.getCount();
+
+  if (ITimer0.getTimer() == 0)
+  {
+    if (countLocal != 0)
     {
-      long countLocal = ITimer0.getCount();
-              
-      if (ITimer0.getTimer() == 0)
+      if (ITimer0.checkTimerDone())
       {
-        if (countLocal != 0)
+        ITimer0.callback();
+
+        if (ITimer0.get_CCMPValue() > MAX_COUNT_16BIT)
         {
-          if (ITimer0.checkTimerDone())
-          {              
-            ITimer0.callback();
-            
-            if (ITimer0.get_CCMPValue() > MAX_COUNT_16BIT)            
-            {
-              // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT
-              ITimer0.reload_CCMPValue();
-            }
-            
-            if (countLocal > 0)
-              ITimer0.setCount(countLocal - 1);       
-          }
-          else
-          {
-            //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
-            // If _CCMPValue == 0, flag _timerDone for next cycle     
-            // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
-            ITimer0.adjust_CCMPValue();
-          }
+          // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT
+          ITimer0.reload_CCMPValue();
         }
-        else
-        {          
-          ITimer0.detachInterrupt();
-        }
+
+        if (countLocal > 0)
+          ITimer0.setCount(countLocal - 1);
       }
-      
-      // Clear interrupt flag
-      TCB0.INTFLAGS = TCB_CAPT_bm;
+      else
+      {
+        //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
+        // If _CCMPValue == 0, flag _timerDone for next cycle
+        // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
+        ITimer0.adjust_CCMPValue();
+      }
     }
-  #endif  //#ifndef TIMER0_INSTANTIATED
+    else
+    {
+      ITimer0.detachInterrupt();
+    }
+  }
+
+  // Clear interrupt flag
+  TCB0.INTFLAGS = TCB_CAPT_bm;
+}
+#endif  //#ifndef TIMER0_INSTANTIATED
 #endif    //#if USE_TIMER_0
 
 //////////////////////////////////////////////
 
-#if USE_TIMER_1 
+#if USE_TIMER_1
 #ifndef TIMER1_INSTANTIATED
-  // To force pre-instantiate only once
-  #define TIMER1_INSTANTIATED
-  TimerInterrupt ITimer1(HW_TIMER_1);
-  
-  // Timer0 is used for micros(), millis(), delay(), etc and can't be used
-  // Pre-instantiate
+// To force pre-instantiate only once
+#define TIMER1_INSTANTIATED
+TimerInterrupt ITimer1(HW_TIMER_1);
 
-  ISR(TCB1_INT_vect)
+// Timer0 is used for micros(), millis(), delay(), etc and can't be used
+// Pre-instantiate
+
+ISR(TCB1_INT_vect)
+{
+  long countLocal = ITimer1.getCount();
+
+  if (ITimer1.getTimer() == 1)
   {
-    long countLocal = ITimer1.getCount();
-         
-    if (ITimer1.getTimer() == 1)
+    if (countLocal != 0)
     {
-      if (countLocal != 0)
+      if (ITimer1.checkTimerDone())
       {
-        if (ITimer1.checkTimerDone())
-        {          
-          ITimer1.callback();
-          
-          if (ITimer1.get_CCMPValue() > MAX_COUNT_16BIT)
-          {
-            // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
-            ITimer1.reload_CCMPValue();
-          }
-               
-          if (countLocal > 0)                  
-            ITimer1.setCount(countLocal - 1);
-        }
-        else
+        ITimer1.callback();
+
+        if (ITimer1.get_CCMPValue() > MAX_COUNT_16BIT)
         {
-          //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
-          // If _CCMPValue == 0, flag _timerDone for next cycle  
-          // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
-          ITimer1.adjust_CCMPValue();
-        }         
+          // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
+          ITimer1.reload_CCMPValue();
+        }
+
+        if (countLocal > 0)
+          ITimer1.setCount(countLocal - 1);
       }
       else
       {
-        ITimer1.detachInterrupt();
+        //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
+        // If _CCMPValue == 0, flag _timerDone for next cycle
+        // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
+        ITimer1.adjust_CCMPValue();
       }
     }
-    
-    // Clear interrupt flag
-    TCB1.INTFLAGS = TCB_CAPT_bm;
+    else
+    {
+      ITimer1.detachInterrupt();
+    }
   }
-  
+
+  // Clear interrupt flag
+  TCB1.INTFLAGS = TCB_CAPT_bm;
+}
+
 #endif  //#ifndef TIMER1_INSTANTIATED
 #endif    //#if USE_TIMER_1
 
@@ -444,47 +445,47 @@ void TimerInterrupt::resumeTimer()
 // Pre-instantiate
 #if USE_TIMER_2
 #ifndef TIMER2_INSTANTIATED
-  #define TIMER2_INSTANTIATED
-  TimerInterrupt ITimer2(HW_TIMER_2);
-  
-  ISR(TCB2_INT_vect)
+#define TIMER2_INSTANTIATED
+TimerInterrupt ITimer2(HW_TIMER_2);
+
+ISR(TCB2_INT_vect)
+{
+  long countLocal = ITimer2.getCount();
+
+  if (ITimer2.getTimer() == 2)
   {
-    long countLocal = ITimer2.getCount();
-   
-    if (ITimer2.getTimer() == 2)
+    if (countLocal != 0)
     {
-      if (countLocal != 0)
+      if (ITimer2.checkTimerDone())
       {
-        if (ITimer2.checkTimerDone())
-        {           
-          ITimer2.callback();
-          
-          if (ITimer2.get_CCMPValue() > MAX_COUNT_16BIT)
-          {
-            // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
-            ITimer2.reload_CCMPValue();
-          }
+        ITimer2.callback();
 
-          if (countLocal > 0)
-           ITimer2.setCount(countLocal - 1);
-
+        if (ITimer2.get_CCMPValue() > MAX_COUNT_16BIT)
+        {
+          // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
+          ITimer2.reload_CCMPValue();
         }
-        else
-        {           
-          //Deduct _CCMPValue by min(MAX_COUNT_8BIT, _CCMPValue)
-          // If _CCMPValue == 0, flag _timerDone for next cycle
-          ITimer2.adjust_CCMPValue();
-        }          
-      }    
+
+        if (countLocal > 0)
+          ITimer2.setCount(countLocal - 1);
+
+      }
       else
-      {        
-        ITimer2.detachInterrupt();
+      {
+        //Deduct _CCMPValue by min(MAX_COUNT_8BIT, _CCMPValue)
+        // If _CCMPValue == 0, flag _timerDone for next cycle
+        ITimer2.adjust_CCMPValue();
       }
     }
-    
-    // Clear interrupt flag
-    TCB2.INTFLAGS = TCB_CAPT_bm;
-  }    
+    else
+    {
+      ITimer2.detachInterrupt();
+    }
+  }
+
+  // Clear interrupt flag
+  TCB2.INTFLAGS = TCB_CAPT_bm;
+}
 #endif  //#ifndef TIMER2_INSTANTIATED
 #endif    //#if USE_TIMER_2
 
@@ -492,102 +493,102 @@ void TimerInterrupt::resumeTimer()
 
 // Pre-instantiate
 #if ( USE_TIMER_3 && ( ( defined(DX_64_PINS) || defined(DX_48_PINS) ) && defined(TCB3) ) )
-  #ifndef TIMER3_INSTANTIATED
-    // To force pre-instantiate only once
-    #define TIMER3_INSTANTIATED
-    TimerInterrupt ITimer3(HW_TIMER_3);
-    
-    ISR(TCB3_INT_vect)
+#ifndef TIMER3_INSTANTIATED
+// To force pre-instantiate only once
+#define TIMER3_INSTANTIATED
+TimerInterrupt ITimer3(HW_TIMER_3);
+
+ISR(TCB3_INT_vect)
+{
+  long countLocal = ITimer3.getCount();
+
+  if (ITimer3.getTimer() == 3)
+  {
+    if (countLocal != 0)
     {
-      long countLocal = ITimer3.getCount();
-      
-      if (ITimer3.getTimer() == 3)
+      if (ITimer3.checkTimerDone())
       {
-        if (countLocal != 0)
+        ITimer3.callback();
+
+        if (ITimer3.get_CCMPValue() > MAX_COUNT_16BIT)
         {
-          if (ITimer3.checkTimerDone())
-          {             
-            ITimer3.callback();
-            
-            if (ITimer3.get_CCMPValue() > MAX_COUNT_16BIT)
-            {
-              // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
-              ITimer3.reload_CCMPValue();
-            }
-                        
-            if (countLocal > 0)
-              ITimer3.setCount(countLocal - 1);     
-          }
-          else
-          {
-            //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
-            // If _CCMPValue == 0, flag _timerDone for next cycle          
-            // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
-            ITimer3.adjust_CCMPValue();
-          }
+          // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
+          ITimer3.reload_CCMPValue();
         }
-        else
-        {          
-          ITimer3.detachInterrupt();
-        }
+
+        if (countLocal > 0)
+          ITimer3.setCount(countLocal - 1);
       }
-      
-      // Clear interrupt flag
-      TCB3.INTFLAGS = TCB_CAPT_bm;
-    }  
-    
-  #endif  //#ifndef TIMER3_INSTANTIATED
+      else
+      {
+        //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
+        // If _CCMPValue == 0, flag _timerDone for next cycle
+        // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
+        ITimer3.adjust_CCMPValue();
+      }
+    }
+    else
+    {
+      ITimer3.detachInterrupt();
+    }
+  }
+
+  // Clear interrupt flag
+  TCB3.INTFLAGS = TCB_CAPT_bm;
+}
+
+#endif  //#ifndef TIMER3_INSTANTIATED
 #endif    //#if USE_TIMER_3
 
 //////////////////////////////////////////////
 
 // Pre-instantiate
 #if ( USE_TIMER_4 && defined(DX_64_PINS) && defined(TCB4) )
-  #ifndef TIMER4_INSTANTIATED
-    // To force pre-instantiate only once
-    #define TIMER4_INSTANTIATED
-    TimerInterrupt ITimer4(HW_TIMER_4);
-    
-    ISR(TCB4_INT_vect)
+#ifndef TIMER4_INSTANTIATED
+// To force pre-instantiate only once
+#define TIMER4_INSTANTIATED
+TimerInterrupt ITimer4(HW_TIMER_4);
+
+ISR(TCB4_INT_vect)
+{
+  long countLocal = ITimer4.getCount();
+
+  if (ITimer4.getTimer() == 4)
+  {
+    if (countLocal != 0)
     {
-      long countLocal = ITimer4.getCount();
-      
-      if (ITimer4.getTimer() == 4)
+      if (ITimer4.checkTimerDone())
       {
-        if (countLocal != 0)
+        ITimer4.callback();
+
+        if (ITimer4.get_CCMPValue() > MAX_COUNT_16BIT)
         {
-          if (ITimer4.checkTimerDone())
-          {             
-            ITimer4.callback();
-            
-            if (ITimer4.get_CCMPValue() > MAX_COUNT_16BIT)
-            {
-              // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
-              ITimer4.reload_CCMPValue();
-            }
-                        
-            if (countLocal > 0)
-              ITimer4.setCount(countLocal - 1);     
-          }
-          else
-          {
-            //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
-            // If _CCMPValue == 0, flag _timerDone for next cycle          
-            // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
-            ITimer4.adjust_CCMPValue();
-          }
+          // To reload _CCMPValueRemaining as well as _CCMP register to MAX_COUNT_16BIT if _CCMPValueRemaining > MAX_COUNT_16BIT
+          ITimer4.reload_CCMPValue();
         }
-        else
-        {          
-          ITimer4.detachInterrupt();
-        }
+
+        if (countLocal > 0)
+          ITimer4.setCount(countLocal - 1);
       }
-      
-      // Clear interrupt flag
-      TCB4.INTFLAGS = TCB_CAPT_bm;
-    }  
-    
-  #endif  //#ifndef TIMER3_INSTANTIATED
+      else
+      {
+        //Deduct _CCMPValue by min(MAX_COUNT_16BIT, _CCMPValue)
+        // If _CCMPValue == 0, flag _timerDone for next cycle
+        // If last one (_CCMPValueRemaining < MAX_COUNT_16BIT) => load _CCMP register _CCMPValueRemaining
+        ITimer4.adjust_CCMPValue();
+      }
+    }
+    else
+    {
+      ITimer4.detachInterrupt();
+    }
+  }
+
+  // Clear interrupt flag
+  TCB4.INTFLAGS = TCB_CAPT_bm;
+}
+
+#endif  //#ifndef TIMER3_INSTANTIATED
 #endif    //#if USE_TIMER_3
 
 //////////////////////////////////////////////
